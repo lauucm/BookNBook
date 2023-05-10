@@ -4,12 +4,9 @@ package org.BookNBook.model;
 import java.time.LocalDate;
 import lombok.*;
 
-@Setter
-@Getter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
-@ToString
 @Builder
 
 public class Estadistica {

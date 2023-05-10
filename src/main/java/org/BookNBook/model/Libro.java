@@ -3,12 +3,9 @@ import lombok.*;
 
 import java.time.LocalDate;
 
-@Setter
-@Getter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
-@ToString
 @Builder
 public class Libro {
 
