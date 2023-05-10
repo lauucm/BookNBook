@@ -2,12 +2,9 @@ package org.BookNBook.model;
 
 import lombok.*;
 
-@Setter
-@Getter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
-@ToString
 @Builder
 public class Usuario {
     private Integer id;
