@@ -11,4 +11,8 @@ public class Autor {
     private Integer id;
     private String pseudonimo;
     private String localidad;
+
+    public Autor(String pseudonimo) {
+        this.pseudonimo = pseudonimo;
+    }
 }
