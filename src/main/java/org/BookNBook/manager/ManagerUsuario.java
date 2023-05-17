@@ -8,8 +8,21 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ *
+ */
 public class ManagerUsuario {
 
+    /**
+     * Conocer si existe un usuario en la base de datos a partir de su email
+     * @param con
+     * @param email
+     * @return <ul>
+     *     <li>true si existe un usuario con el email</li>ç
+     *     <li>false si no existe un usuario con el email</li>
+     * </ul>
+     *
+     */
     public boolean existeUsuario(MySQLConnector con, String email) {
 
         Connection conexion = null;
@@ -43,6 +56,19 @@ public class ManagerUsuario {
         return false;
     }
 
+    /**
+     * Ingresar un nuevo usuario dentro de la base datos
+     * @param con
+     * @param nombre
+     * @param apellido1
+     * @param apellido2
+     * @param email
+     * @param password
+     * @return <ul>
+     *      <li>true se ha podido crear un usuario</li>ç
+     *      <li>false si no se ha podido crear un usuario</li>
+     * </ul>
+     */
     // tipo usuario ?? id ??
     public boolean newUsuario (MySQLConnector con, String nombre, String apellido1, String apellido2, String email, String password) {
 
@@ -71,12 +97,22 @@ public class ManagerUsuario {
                 e.printStackTrace();
             }
         } else {
-            System.out.println("Usuario ya registrado");
+            System.out.println("Usuario ya registrado previamente");
             return false;
         }
         return false;
     }
 
+    /**
+     * Validar si el email y la contraseña introducidos pertenecen al mismo usuario
+     * @param con
+     * @param usuario
+     * @param passwd
+     * @return <ul>
+     *     <li>true si el correo y la contraseña son validos</li>
+     *     <li>false si el correo o contraseña no son validos</li>
+     * </ul>
+     */
     public boolean validarUsuario(MySQLConnector con, String usuario, String passwd) {
 
         Connection conexion = null;
@@ -113,6 +149,16 @@ public class ManagerUsuario {
         return false;
     }
 
+    /**
+     * Comprobación del usuario que ha iniciado sesion
+     * @param con
+     * @param usuario
+     * @param passwd
+     * @return <ul>
+     *     <li>usuario en caso de ser posible el login dentro de la app</li>
+     *     <li>null en caso de no ser posible</li>
+     * </ul>
+     */
     public Usuario logging(MySQLConnector con, String usuario, String passwd) {
 
         Connection conexion = null;
