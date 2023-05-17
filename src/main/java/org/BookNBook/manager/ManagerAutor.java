@@ -8,6 +8,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ManagerAutor {
 
@@ -94,11 +96,12 @@ public class ManagerAutor {
 
     /**
      * Buscar en BBDD el autor por su pseudonimo
+     *
      * @param con
      * @param pseudonimo
      * @return <ul>
-     *              <li>Autor en caso de que exista en la BBDD</li>
-     *              <li>Null en caso de que no exista en la BBDD</li>
+     * <li>Autor en caso de que exista en la BBDD</li>
+     * <li>Null en caso de que no exista en la BBDD</li>
      * </ul>
      */
     public Autor buscarAutor(MySQLConnector con, String pseudonimo) {
@@ -126,6 +129,48 @@ public class ManagerAutor {
         }
 
         return null;
+    }
+
+    /**
+     * Lista de todos los libros del autor pasado por parametro
+     *
+     * @param con
+     * @param libro
+     * @param id
+     * @return <ul>
+     * <li>libros cuando el autor tiene libros</li>
+     * <li>null si el autor no tiene libros</li>
+     * </ul>
+     */
+    public List<Libro> listarLibrosAutor(MySQLConnector con, Libro libro, Integer id) {
+        Connection conexion = null;
+        try {
+            conexion = con.getMySQLConnection();
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        String sql = "SELECT libro.* from libro inner join autor on libros.autor= autor.id where autor.id=? ";
+
+        try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            ResultSet result = stmt.executeQuery();
+            result.beforeFirst();
+            ArrayList<Libro> libros = new ArrayList<>();
+            while (result.next()) {
+                Libro libro1 = new Libro(result);
+                libros.add(libro1);
+            }
+            return libros;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+
+
     }
 }
 

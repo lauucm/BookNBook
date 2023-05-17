@@ -1,14 +1,16 @@
 package org.BookNBook.manager;
 
 import org.BookNBook.conector.MySQLConnector;
+import org.BookNBook.model.Autor;
 import org.BookNBook.model.Libro;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.time.LocalDate;
+import java.time.ZoneId;
 
 public class ManagerLibro {
+
+
 
     public Libro buscarLibro(MySQLConnector con, String nombre) {
 
@@ -38,7 +40,7 @@ public class ManagerLibro {
         return null;
     }
 
-    public boolean addLibro(MySQLConnector con, Libro libro) {
+    public boolean addLibro(MySQLConnector con, Libro libro, Autor autor) {
 
         Connection conexion = null;
         try {
@@ -49,16 +51,16 @@ public class ManagerLibro {
             throw new RuntimeException(e);
         }
 
-        //AUTOR ?
-        String sql = "INSERT INTO Libros(`nombre`,`descripcion`,`fecha_publicacion`, `pag_total`, `tipologiaLibro`, `tematicaLibro`) VALUES(?,?,?,?,?,?)";
+        String sql = "INSERT INTO Libros(`nombre`,`descripcion`,`fecha_publicacion`, `pag_total`, `tipologiaLibro`, `tematicaLibro`, `id_autor`) VALUES(?,?,?,?,?,?)";
 
         try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
             stmt.setString(1, libro.getNombre());
             stmt.setString(2, libro.getDescripcion());
-            //stmt.setString(3, libro.getFechaPublicacion());
+            stmt.setString(3, libro.getFechaPublicacion().toString());
             stmt.setInt(4, libro.getPaginaTotal());
-            //stmt.setString(5, libro.getTipologiaLibro());
-            //stmt.setString(6, libro.getTematicaLibro());
+            stmt.setString(5, libro.getTipologiaLibro().toString());
+            stmt.setString(6, libro.getTematicaLibro().toString());
+            stmt.setInt(7, autor.getId());
             stmt.execute();
             return true;
         } catch (SQLException e) {
