@@ -65,7 +65,6 @@ public class ManagerUsuario {
      *     <li>false si no se ha podido crear un usuario</li>
      * </ul>
      */
-
     public boolean newUsuario (MySQLConnector con, Usuario usuario) {
 
         Connection conexion = null;

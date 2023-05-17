@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Data
-@Builder
 public class Usuario {
     private Integer id;
     private String nombre;

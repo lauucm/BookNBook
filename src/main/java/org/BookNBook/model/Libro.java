@@ -7,7 +7,6 @@ import java.time.LocalDate;
 
 
 @Data
-@Builder
 public class Libro {
 
     private Integer id;
@@ -37,10 +36,10 @@ public class Libro {
             this.nombre = result.getString("nombre");
             this.autor = new Autor(result.getString("pseudonimo"));
             this.descripcion = result.getString("descripcion");
-            //this.fechaPublicacion =  result.getDate("fecha_publicacion");
+            this.fechaPublicacion =  LocalDate.parse(result.getString("fecha_publicacion"));
             this.paginaTotal = result.getInt("pag_total");
-            //this.tipologiaLibro = result.getString("tipologiaLibro");
-            //this.tematicaLibro = result.getString("tematicaLibro");
+            this.tipologiaLibro = TipologiaLibro.valueOf(result.getString("tipologiaLibro"));
+            this.tematicaLibro = TematicaLibro.valueOf(result.getString("tematicaLibro"));
         }catch(SQLException e) {
             e.getStackTrace();
             throw e;
