@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 
 @Data
-public class Libro {
+public class Libro extends Saga{
 
     private Integer id;
     private String nombre;
@@ -19,7 +19,8 @@ public class Libro {
     private TipologiaLibro tipologiaLibro;
     private TematicaLibro tematicaLibro;
 
-    public Libro(int id, String nombre, String pseudonimo, String descripcion, LocalDate fechaPublicacion, Integer paginaTotal, TipologiaLibro tipologiaLibro, TematicaLibro tematicaLibro) {
+    public Libro(int id, String nombre, String pseudonimo, String descripcion, LocalDate fechaPublicacion, Integer paginaTotal, TipologiaLibro tipologiaLibro, TematicaLibro tematicaLibro, String nombreSaga) {
+        super(nombreSaga);
         this.id = id;
         this.nombre = nombre;
         this.autor = new Autor(pseudonimo);
@@ -31,7 +32,9 @@ public class Libro {
     }
 
     public Libro(ResultSet result) throws SQLException {
+        super(result);
         try {
+
             this.id = result.getInt("id");
             this.nombre = result.getString("nombre");
             this.autor = new Autor(result.getString("pseudonimo"));

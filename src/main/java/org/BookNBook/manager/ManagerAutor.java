@@ -3,6 +3,7 @@ package org.BookNBook.manager;
 import org.BookNBook.conector.MySQLConnector;
 import org.BookNBook.model.Autor;
 import org.BookNBook.model.Libro;
+import org.BookNBook.model.Saga;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -169,8 +170,35 @@ public class ManagerAutor {
         }
 
         return null;
+    }
 
+    public List<Saga> ListarSagaAutor (MySQLConnector con, Integer id){
+        Connection conexion = null;
+        try {
+            conexion = con.getMySQLConnection();
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
+        String sql= "SELECT saga.*, libros.* FROM saga inner join autor on saga.id = autor.id_saga inner join libros on saga.id = libros.id_saga where autor.id = ?";
+
+        try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            ResultSet result = stmt.executeQuery();
+            result.beforeFirst();
+            ArrayList<Saga> sagas = new ArrayList<>();
+            while (result.next()) {
+                Saga saga1 = new Saga(result);
+                sagas.add(saga1);
+            }
+            return sagas;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }
 
