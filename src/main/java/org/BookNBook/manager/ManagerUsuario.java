@@ -43,7 +43,7 @@ public class ManagerUsuario {
         return false;
     }
 
-    // tipo usuario ?? id ??
+    // tipo usuario ??
     public boolean newUsuario (MySQLConnector con, String nombre, String apellido1, String apellido2, String email, String password) {
 
         Connection conexion = null;
