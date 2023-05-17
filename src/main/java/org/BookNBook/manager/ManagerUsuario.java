@@ -59,18 +59,14 @@ public class ManagerUsuario {
     /**
      * Ingresar un nuevo usuario dentro de la base datos
      * @param con
-     * @param nombre
-     * @param apellido1
-     * @param apellido2
-     * @param email
-     * @param password
+     * @param usuario
      * @return <ul>
-     *      <li>true se ha podido crear un usuario</li>ç
-     *      <li>false si no se ha podido crear un usuario</li>
+     *     <li>true se ha podido crear un usuario</li>
+     *     <li>false si no se ha podido crear un usuario</li>
      * </ul>
      */
-    // tipo usuario ?? id ??
-    public boolean newUsuario (MySQLConnector con, String nombre, String apellido1, String apellido2, String email, String password) {
+
+    public boolean newUsuario (MySQLConnector con, Usuario usuario) {
 
         Connection conexion = null;
         try {
@@ -81,15 +77,16 @@ public class ManagerUsuario {
             throw new RuntimeException(e);
         }
 
-        if (!existeUsuario(con, email) && !email.equals("")) {
-            String sql = "INSERT INTO Usuario (`nombre`,`apellido1`,`apellido2`,`email`,`password`) VALUES(?,?,?,?,?)";
+        if (!existeUsuario(con, usuario.getEmail()) && ! "".equals(usuario.getEmail())) {
+            String sql = "INSERT INTO Usuario (`nombre`,`apellido1`,`apellido2`,`email`,`password`, `tipo_usuario`) VALUES(?,?,?,?,?,?)";
 
             try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
-                stmt.setString(1, nombre);
-                stmt.setString(2, apellido1);
-                stmt.setString(3, apellido2);
-                stmt.setString(4, email);
-                stmt.setString(5, password);
+                stmt.setString(1, usuario.getNombre());
+                stmt.setString(2, usuario.getApellido1());
+                stmt.setString(3, usuario.getApellido2());
+                stmt.setString(4, usuario.getEmail());
+                stmt.setString(5, usuario.getPassword());
+                stmt.setString(6, usuario.getTipoUsuario().toString());
                 stmt.execute();
                 System.out.println("Nuevo usuario registrado");
                 return true;
