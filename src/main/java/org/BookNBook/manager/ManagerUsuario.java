@@ -34,22 +34,14 @@ public class ManagerUsuario {
             throw new RuntimeException(e);
         }
 
-        String sql = "SELECT count(id) as num FROM Usuario WHERE email = ?";
+        String sql = "SELECT * FROM Usuario WHERE email = ?";
 
         try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
             stmt.setString(1, email);
 
             ResultSet result = stmt.executeQuery();
             result.beforeFirst();
-            if (result.next()) {
-                System.out.println(result.getString("num"));
-                if (result.getInt("num") > 0) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-            return false;
+            return result.next() ? true : false;
         } catch (SQLException e) {
             e.getStackTrace();
         }
@@ -126,17 +118,7 @@ public class ManagerUsuario {
             stmt.setString(1, usuario);
             stmt.setString(2, passwd);
             ResultSet result = stmt.executeQuery();
-            if(result.next()) {
-                String user = result.getString("email");
-                String pass = result.getString("password");
-                if (user.equals(usuario) && pass.equals(passwd)) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }else {
-                return false;
-            }
+            return result.next() ? true : false;
         } catch (SQLException esql) {
             System.out.println(esql.getMessage());
         } catch (Exception e) {
