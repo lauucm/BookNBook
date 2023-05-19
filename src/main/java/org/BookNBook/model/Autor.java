@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 @Data
-@Builder
 public class Autor {
 
     private Integer id;
