@@ -136,14 +136,13 @@ public class ManagerAutor {
      * Lista de todos los libros del autor pasado por parametro
      *
      * @param con
-     * @param libro
      * @param id
      * @return <ul>
      * <li>libros cuando el autor tiene libros</li>
      * <li>null si el autor no tiene libros</li>
      * </ul>
      */
-    public List<Libro> listarLibrosAutor(MySQLConnector con, Libro libro, Integer id) {
+    public List<Libro> listarLibrosAutor(MySQLConnector con, Integer id) {
         Connection conexion = null;
         try {
             conexion = con.getMySQLConnection();
@@ -153,7 +152,7 @@ public class ManagerAutor {
             throw new RuntimeException(e);
         }
 
-        String sql = "SELECT libro.* from libro inner join autor on libros.autor= autor.id where autor.id=? ";
+        String sql = "SELECT libros.* from libros inner join autor on libros.autor= autor.id where autor.id=? ";
 
         try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
             stmt.setInt(1, id);
@@ -161,8 +160,8 @@ public class ManagerAutor {
             result.beforeFirst();
             ArrayList<Libro> libros = new ArrayList<>();
             while (result.next()) {
-                Libro libro1 = new Libro(result);
-                libros.add(libro1);
+                Libro libro = new Libro(result);
+                libros.add(libro);
             }
             return libros;
         } catch (SQLException e) {
@@ -172,6 +171,7 @@ public class ManagerAutor {
         return null;
     }
 
+    // TODO no se como solucionar este lio
     public List<Saga> ListarSagaAutor (MySQLConnector con, Integer id){
         Connection conexion = null;
         try {
