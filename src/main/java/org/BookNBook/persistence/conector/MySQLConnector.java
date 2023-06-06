@@ -1,4 +1,4 @@
-package org.BookNBook.conector;
+package org.BookNBook.persistence.conector;
 
 import lombok.Getter;
 

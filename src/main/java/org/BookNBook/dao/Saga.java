@@ -1,4 +1,4 @@
-package org.BookNBook.model;
+package org.BookNBook.dao;
 
 import lombok.Data;
 

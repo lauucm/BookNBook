@@ -1,4 +1,4 @@
-package org.BookNBook.model;
+package org.BookNBook.dao;
 import lombok.*;
 
 import java.sql.ResultSet;
@@ -18,8 +18,9 @@ public class Libro extends Saga{
     private Integer paginaTotal;
     private TipologiaLibro tipologiaLibro;
     private TematicaLibro tematicaLibro;
+    private String url;
 
-    public Libro(int id, String nombre, String pseudonimo, String descripcion, LocalDate fechaPublicacion, Integer paginaTotal, TipologiaLibro tipologiaLibro, TematicaLibro tematicaLibro, String nombreSaga) {
+    public Libro(int id, String nombre, String pseudonimo, String descripcion, LocalDate fechaPublicacion, Integer paginaTotal, TipologiaLibro tipologiaLibro, TematicaLibro tematicaLibro, String nombreSaga, String url) {
         super(nombreSaga);
         this.id = id;
         this.nombre = nombre;
@@ -29,6 +30,7 @@ public class Libro extends Saga{
         this.paginaTotal = paginaTotal;
         this.tipologiaLibro = tipologiaLibro;
         this.tematicaLibro = tematicaLibro;
+        this.url = url;
     }
 
     public Libro(ResultSet result) throws SQLException {
@@ -43,6 +45,7 @@ public class Libro extends Saga{
             this.paginaTotal = result.getInt("pag_total");
             this.tipologiaLibro = TipologiaLibro.valueOf(result.getString("tipologiaLibro"));
             this.tematicaLibro = TematicaLibro.valueOf(result.getString("tematicaLibro"));
+            this.url = result.getString("url");
         }catch(SQLException e) {
             e.getStackTrace();
             throw e;
