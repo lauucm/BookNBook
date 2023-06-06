@@ -1,4 +1,4 @@
-package org.BookNBook.conector;
+package org.BookNBook.persistence.conector;
 
 public class MySQLConstants {
     public static final String PASSWD = "jdbc.mysql.passwd";

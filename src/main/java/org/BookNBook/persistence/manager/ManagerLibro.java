@@ -1,17 +1,14 @@
-package org.BookNBook.manager;
+package org.BookNBook.persistence.manager;
 
-import org.BookNBook.conector.MySQLConnector;
-import org.BookNBook.model.Autor;
-import org.BookNBook.model.Libro;
+import org.BookNBook.persistence.conector.MySQLConnector;
+import org.BookNBook.dao.Autor;
+import org.BookNBook.dao.Libro;
 
 import java.sql.*;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ManagerLibro {
-
 
 
     public Libro buscarLibro(MySQLConnector con, String nombre) {
@@ -53,7 +50,7 @@ public class ManagerLibro {
             throw new RuntimeException(e);
         }
 
-        String sql = "INSERT INTO Libros(`nombre`,`descripcion`,`fecha_publicacion`, `pag_total`, `tipologiaLibro`, `tematicaLibro`, `id_autor`) VALUES(?,?,?,?,?,?)";
+        String sql = "INSERT INTO Libros(`nombre`,`descripcion`,`fecha_publicacion`, `pag_total`, `tipologiaLibro`, `tematicaLibro`, `id_autor`, `url`) VALUES(?,?,?,?,?,?,?)";
 
         try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
             stmt.setString(1, libro.getNombre());
@@ -63,6 +60,7 @@ public class ManagerLibro {
             stmt.setString(5, libro.getTipologiaLibro().toString());
             stmt.setString(6, libro.getTematicaLibro().toString());
             stmt.setInt(7, autor.getId());
+            stmt.setString(8, libro.getUrl());
             stmt.execute();
             return true;
         } catch (SQLException e) {
@@ -87,6 +85,35 @@ public class ManagerLibro {
         try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
             stmt.setString(1, "'" + tipo + "'");
             stmt.setString(2, "'" + genero + "'");
+            ResultSet result = stmt.executeQuery();
+            result.beforeFirst();
+
+            ArrayList<Libro> libros = new ArrayList<>();
+            while (result.next()) {
+                Libro libro = new Libro(result);
+                libros.add(libro);
+            }
+            return libros;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<Libro> listarLibrosNoLeidos (MySQLConnector con, Integer idUsuario) {
+        Connection conexion = null;
+        try {
+            conexion = con.getMySQLConnection();
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        String sql = "SELECT * FROM libros inner join dinamica on dinamica.id_libro = libros.id where dinamica.pag_actual <1 AND dinamica.id_usuario = ?";
+
+        try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
+            stmt.setInt(1, idUsuario);
             ResultSet result = stmt.executeQuery();
             result.beforeFirst();
 

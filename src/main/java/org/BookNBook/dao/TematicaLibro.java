@@ -1,4 +1,4 @@
-package org.BookNBook.model;
+package org.BookNBook.dao;
 
 public enum TematicaLibro {
     LITERARIA, NEGRA, HISTORICA, ROMANTICA, EROTICA, TEATRO, CIENCIAFICCION, TERROR, FANTASIA, CIENCIA, ARTE, TEMASOCIAL, HUMOR

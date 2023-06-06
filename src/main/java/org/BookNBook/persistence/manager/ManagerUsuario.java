@@ -1,7 +1,7 @@
-package org.BookNBook.manager;
+package org.BookNBook.persistence.manager;
 
-import org.BookNBook.conector.MySQLConnector;
-import org.BookNBook.model.Usuario;
+import org.BookNBook.persistence.conector.MySQLConnector;
+import org.BookNBook.dao.Usuario;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
