@@ -1,4 +1,4 @@
-package org.BookNBook.dao;
+package org.BookNBook.persistence.dao;
 
 import lombok.*;
 
@@ -6,6 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Usuario {
     private Integer id;
     private String nombre;
@@ -22,6 +25,7 @@ public class Usuario {
         this.apellido2 = apellido2;
         this.email = email;
         this.password = password;
+        this.tipoUsuario = TipoUsuario.NORMAL;
     }
 
     public Usuario(ResultSet result) throws SQLException {
@@ -32,6 +36,7 @@ public class Usuario {
             this.apellido2 = result.getString("apellido2");
             this.email = result.getString("email");
             this.password = result.getString("password");
+            this.tipoUsuario = TipoUsuario.NORMAL;
         }catch(SQLException e) {
             e.getStackTrace();
             throw e;

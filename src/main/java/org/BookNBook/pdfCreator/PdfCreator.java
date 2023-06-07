@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import com.itextpdf.text.List;
 import com.itextpdf.text.ListItem;
 import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Font;
@@ -22,7 +21,7 @@ import com.itextpdf.text.Image;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 import lombok.AllArgsConstructor;
-import org.BookNBook.dao.Libro;
+import org.BookNBook.persistence.dao.Libro;
 import org.BookNBook.persistence.conector.MySQLConnector;
 import org.BookNBook.persistence.manager.ManagerLibro;
 

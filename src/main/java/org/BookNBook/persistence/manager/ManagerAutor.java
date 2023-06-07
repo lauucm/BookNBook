@@ -1,9 +1,9 @@
 package org.BookNBook.persistence.manager;
 
 import org.BookNBook.persistence.conector.MySQLConnector;
-import org.BookNBook.dao.Autor;
-import org.BookNBook.dao.Libro;
-import org.BookNBook.dao.Saga;
+import org.BookNBook.persistence.dao.Autor;
+import org.BookNBook.persistence.dao.Libro;
+import org.BookNBook.persistence.dao.Saga;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -24,7 +24,7 @@ public class ManagerAutor {
      * <li>false si no existe el autor en la BBDD</li>
      * </ul>
      */
-    public boolean existeAutor(MySQLConnector con, String pseudonimo) {
+    private boolean existeAutor(MySQLConnector con, String pseudonimo) {
         Connection conexion = null;
         try {
             conexion = con.getMySQLConnection();
@@ -57,7 +57,7 @@ public class ManagerAutor {
     }
 
     /**
-     * Añadir un autor quw no exista en la BBDD
+     * Añadir un autor que no exista en la BBDD
      *
      * @param con
      * @param autor
@@ -66,7 +66,6 @@ public class ManagerAutor {
      * <li>false si existe el autor, no se añade</li>
      * </ul>
      */
-    // Si la localidad es nula que coño hago
     public boolean addAutor(MySQLConnector con, Autor autor) {
         Connection conexion = null;
         try {
@@ -164,6 +163,34 @@ public class ManagerAutor {
                 libros.add(libro);
             }
             return libros;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public List<Autor> listarAutores(MySQLConnector con) {
+        Connection conexion = null;
+        try {
+            conexion = con.getMySQLConnection();
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        String sql = "SELECT * from autor";
+
+        try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
+            ResultSet result = stmt.executeQuery();
+            result.beforeFirst();
+            ArrayList<Autor> autores = new ArrayList<>();
+            while (result.next()) {
+                Autor autor = new Autor(result);
+                autores.add(autor);
+            }
+            return autores;
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -1,12 +1,18 @@
-package org.BookNBook.dao;
+package org.BookNBook.persistence.dao;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Saga {
 
     private Integer id;
