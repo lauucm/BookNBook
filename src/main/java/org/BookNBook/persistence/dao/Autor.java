@@ -1,4 +1,4 @@
-package org.BookNBook.dao;
+package org.BookNBook.persistence.dao;
 
 import lombok.*;
 
@@ -7,6 +7,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Autor {
 
     private Integer id;

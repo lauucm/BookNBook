@@ -1,7 +1,8 @@
 package org.BookNBook.persistence.manager;
 
 import org.BookNBook.persistence.conector.MySQLConnector;
-import org.BookNBook.dao.Usuario;
+import org.BookNBook.persistence.dao.Autor;
+import org.BookNBook.persistence.dao.Usuario;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -23,7 +24,7 @@ public class ManagerUsuario {
      * </ul>
      *
      */
-    public boolean existeUsuario(MySQLConnector con, String email) {
+    private boolean existeUsuario(MySQLConnector con, String email) {
 
         Connection conexion = null;
         try {
@@ -69,7 +70,7 @@ public class ManagerUsuario {
         }
 
         if (!existeUsuario(con, usuario.getEmail()) && ! "".equals(usuario.getEmail())) {
-            String sql = "INSERT INTO Usuario (`nombre`,`apellido1`,`apellido2`,`email`,`password`, `tipo_usuario`) VALUES(?,?,?,?,?,?)";
+            String sql = "INSERT INTO Usuario (`nombre`,`apellido1`,`apellido2`,`correo`,`password`, `tipo_usuario`) VALUES(?,?,?,?,?,?)";
 
             try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
                 stmt.setString(1, usuario.getNombre());
@@ -101,7 +102,7 @@ public class ManagerUsuario {
      *     <li>false si el correo o contraseña no son validos</li>
      * </ul>
      */
-    public boolean validarUsuario(MySQLConnector con, String usuario, String passwd) {
+    private boolean validarUsuario(MySQLConnector con, String usuario, String passwd) {
 
         Connection conexion = null;
         try {
@@ -174,3 +175,4 @@ public class ManagerUsuario {
     }
 
 }
+
