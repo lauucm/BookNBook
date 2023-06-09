@@ -6,6 +6,8 @@ import org.BookNBook.persistence.dao.Usuario;
 import org.BookNBook.persistence.manager.ManagerUsuario;
 import org.BookNBook.service.UsuarioService;
 
+import java.util.List;
+
 @AllArgsConstructor
 public class UsuarioServiceImpl implements UsuarioService {
 
@@ -19,6 +21,16 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     public Usuario logging(MySQLConnector con, String usuario, String passwd){
         return managerUsuario.logging(con, usuario, passwd);
+    }
+
+    @Override
+    public List<Usuario> listarUsuarios(MySQLConnector con) {
+        return managerUsuario.listarUsuarios(con);
+    }
+
+    @Override
+    public boolean deleteUsuario(MySQLConnector con, String usuario) {
+        return managerUsuario.deleteUsuario(con, usuario);
     }
 
 }

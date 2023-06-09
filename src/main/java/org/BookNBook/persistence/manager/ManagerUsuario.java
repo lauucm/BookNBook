@@ -2,12 +2,15 @@ package org.BookNBook.persistence.manager;
 
 import org.BookNBook.persistence.conector.MySQLConnector;
 import org.BookNBook.persistence.dao.Autor;
+import org.BookNBook.persistence.dao.Libro;
 import org.BookNBook.persistence.dao.Usuario;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -171,6 +174,59 @@ public class ManagerUsuario {
             return null;
         }
         System.out.println("Usuario no introducido");
+        return null;
+    }
+
+    public boolean deleteUsuario(MySQLConnector con, String usuario) {
+
+        Connection conexion = null;
+        try {
+            conexion = con.getMySQLConnection();
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        String sql = "DELETE FROM Usuario WHERE email=?";
+
+        try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
+            stmt.setString(1, usuario);
+            ResultSet result = stmt.executeQuery();
+            return result.next() ? true : false;
+        } catch (SQLException esql) {
+            System.out.println(esql.getMessage());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return false;
+    }
+
+    public List<Usuario> listarUsuarios(MySQLConnector con) {
+        Connection conexion = null;
+        try {
+            conexion = con.getMySQLConnection();
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        String sql = "SELECT * FROM Usuario";
+
+        try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
+            ResultSet result = stmt.executeQuery();
+            result.beforeFirst();
+
+            ArrayList<Usuario> usuarios = new ArrayList<>();
+            while (result.next()) {
+                Usuario user = new Usuario(result);
+                usuarios.add(user);
+            }
+            return usuarios;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
