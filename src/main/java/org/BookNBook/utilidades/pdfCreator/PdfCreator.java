@@ -1,4 +1,4 @@
-package org.BookNBook.pdfCreator;
+package org.BookNBook.utilidades.pdfCreator;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -21,6 +21,7 @@ import com.itextpdf.text.Image;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.BookNBook.persistence.dao.Libro;
 import org.BookNBook.persistence.conector.MySQLConnector;
 import org.BookNBook.persistence.manager.ManagerLibro;
@@ -33,6 +34,7 @@ import org.BookNBook.persistence.manager.ManagerLibro;
  *
  */
 @AllArgsConstructor
+@NoArgsConstructor
 public class PdfCreator {
 
     ManagerLibro managerLibro;

@@ -1,4 +1,4 @@
-package org.BookNBook.mail;
+package org.BookNBook.utilidades.mail;
 
 /**
  * Clase Credential Constants para guardar los credenciales del correo
