@@ -8,10 +8,13 @@ import org.BookNBook.service.UsuarioService;
 
 import java.util.List;
 
-@AllArgsConstructor
 public class UsuarioServiceImpl implements UsuarioService {
 
     ManagerUsuario managerUsuario;
+
+    public UsuarioServiceImpl(ManagerUsuario managerUsuario){
+        this.managerUsuario = managerUsuario;
+    }
 
     @Override
     public boolean newUsuario(MySQLConnector con, Usuario usuario){

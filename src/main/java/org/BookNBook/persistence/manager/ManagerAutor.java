@@ -12,13 +12,17 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Clase Manejador Autor para realizar todas las consultas en cuanto a autores
+ * @author maria.escribano.verde
+ * @author laura.cabrera.mora
+ */
 public class ManagerAutor {
 
     /**
      * Conocer si existe un autor en la base de datos a partir de su pseudonimo
-     *
-     * @param con
-     * @param pseudonimo
+     * @param con Conexión BBDD
+     * @param pseudonimo Nombre del autor
      * @return <ul>
      * <li>true si existe el autor en la BBDD</li>ç
      * <li>false si no existe el autor en la BBDD</li>
@@ -58,9 +62,8 @@ public class ManagerAutor {
 
     /**
      * Añadir un autor que no exista en la BBDD
-     *
-     * @param con
-     * @param autor
+     * @param con conexión BBDD
+     * @param autor Autor
      * @return <ul>
      * <li>true si no existe el autor, se añade</li>
      * <li>false si existe el autor, no se añade</li>
@@ -96,9 +99,8 @@ public class ManagerAutor {
 
     /**
      * Buscar en BBDD el autor por su pseudonimo
-     *
-     * @param con
-     * @param pseudonimo
+     * @param con conexión BBDD
+     * @param pseudonimo Nombre Autor
      * @return <ul>
      * <li>Autor en caso de que exista en la BBDD</li>
      * <li>Null en caso de que no exista en la BBDD</li>
@@ -132,10 +134,9 @@ public class ManagerAutor {
     }
 
     /**
-     * Lista de todos los libros del autor pasado por parametro
-     *
-     * @param con
-     * @param id
+     * Lista de todos los libros de un autor
+     * @param con conexión BBDD
+     * @param id identificador del autor
      * @return <ul>
      * <li>libros cuando el autor tiene libros</li>
      * <li>null si el autor no tiene libros</li>
@@ -170,6 +171,11 @@ public class ManagerAutor {
         return null;
     }
 
+    /**
+     * Listar el total de autores existentes en la BBDD
+     * @param con Conexión a la BBDD
+     * @return Listado de autores
+     */
     public List<Autor> listarAutores(MySQLConnector con) {
         Connection conexion = null;
         try {
@@ -191,36 +197,6 @@ public class ManagerAutor {
                 autores.add(autor);
             }
             return autores;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
-    // TODO no se como solucionar este lio
-    public List<Saga> ListarSagaAutor (MySQLConnector con, Integer id){
-        Connection conexion = null;
-        try {
-            conexion = con.getMySQLConnection();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-        String sql= "SELECT saga.*, libros.* FROM saga inner join autor on saga.id = autor.id_saga inner join libros on saga.id = libros.id_saga where autor.id = ?";
-
-        try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
-            stmt.setInt(1, id);
-            ResultSet result = stmt.executeQuery();
-            result.beforeFirst();
-            ArrayList<Saga> sagas = new ArrayList<>();
-            while (result.next()) {
-                Saga saga1 = new Saga(result);
-                sagas.add(saga1);
-            }
-            return sagas;
         } catch (SQLException e) {
             e.printStackTrace();
         }

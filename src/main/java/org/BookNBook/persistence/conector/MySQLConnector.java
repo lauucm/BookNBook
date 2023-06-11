@@ -8,11 +8,18 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
+/**
+ * Clase responsable de la conexion con bbdd.
+ *
+ */
 public class MySQLConnector {
 
     @Getter
     private Properties prop = new Properties();
 
+    /**
+     * Constructor del conector
+     */
     public MySQLConnector(){
         try {
             prop.load(getClass().getClassLoader().getResourceAsStream("config.properties"));
@@ -21,6 +28,10 @@ public class MySQLConnector {
         }
     }
 
+    /**
+     * Método para conectarse con MySQL indicando el driver que vamos a usar y creando la conexión basada en la URL
+     * @return conexión basada en la URL
+     */
     public Connection getMySQLConnection() throws ClassNotFoundException, SQLException {
         try{
             Class.forName(prop.getProperty(MySQLConstants.DRIVER));
@@ -33,6 +44,10 @@ public class MySQLConnector {
         }
     }
 
+    /**
+     * Obtener la URL para conectar la base de datos
+     * @return URL
+     */
     private String getURL(){
         //jdbc:mysql://localhost:3306/world?user=sa&password=12345678&useSSL=false;
         return new StringBuilder().append(prop.getProperty(MySQLConstants.URL_PREFIX))
@@ -47,13 +62,5 @@ public class MySQLConnector {
                 .append(prop.getProperty(MySQLConstants.USE_LEGACY_DATE_TIME_CODE)).append(("&serverTimezone="))
                 .append(prop.getProperty(MySQLConstants.SERVER_TIMEZONE)).toString();
     }
-
-    public static void main(String[] args) throws SQLException, ClassNotFoundException {
-        MySQLConnector connector = new MySQLConnector();
-        Connection connection = connector.getMySQLConnection();
-        System.out.println(connection.getCatalog());
-        connection.close();
-    }
-
 
 }

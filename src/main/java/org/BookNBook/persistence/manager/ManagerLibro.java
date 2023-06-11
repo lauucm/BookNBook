@@ -8,12 +8,28 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Clase Manejador Libro para realizar todas las consultas en cuanto a libros
+ * @author maria.escribano.verde
+ * @author laura.cabrera.mora
+ */
 public class ManagerLibro {
 
+    /**
+     * Constante comas para texto
+     */
     private final static String COMMA_STR = "'";
+    /**
+     * Constante porcentaje para texto
+     */
     private final static String PERCENT_STR = "%";
 
-
+    /**
+     * Obtener un libro según el nombre
+     * @param con conexión BBDD
+     * @param nombre nombre del libro
+     * @return libro en cuestión
+     */
     public Libro buscarLibro(MySQLConnector con, String nombre) {
 
         Connection conexion = null;
@@ -42,6 +58,16 @@ public class ManagerLibro {
         return null;
     }
 
+    /**
+     * Añadir un libro
+     * @param con conexión a BBDD
+     * @param libro libro
+     * @param autor autor del libro
+     * @return <ul>
+     * <li>true se añade</li>
+     * <li>false no se añade</li>
+     * </ul>
+     */
     public boolean addLibro(MySQLConnector con, Libro libro, Autor autor) {
 
         Connection conexion = null;
@@ -73,6 +99,13 @@ public class ManagerLibro {
         return false;
     }
 
+    /**
+     * Obtener una lista de libros según temática y tipo
+     * @param con conexión BBDD
+     * @param tipo tipo de libro
+     * @param genero género o temática de libro
+     * @return listado de libros según el Tipo y la temática
+     */
     public List<Libro> listarLibrosTipoGenero(MySQLConnector con, String tipo, String genero) {
         Connection conexion = null;
         try {
@@ -103,6 +136,12 @@ public class ManagerLibro {
         return null;
     }
 
+    /**
+     * Obtener un listado de los libros no leidos por el usuario
+     * @param con conexión a BBDD
+     * @param idUsuario Identificador de usuario
+     * @return listado de libros no leidos por el usuario
+     */
     public List<Libro> listarLibrosNoLeidos(MySQLConnector con, Integer idUsuario) {
         Connection conexion = null;
         try {
@@ -132,6 +171,12 @@ public class ManagerLibro {
         return null;
     }
 
+    /**
+     * Obtener un listado de los libros leidos por el usuario
+     * @param con conexión a BBDD
+     * @param idUsuario Identificador de usuario
+     * @return listado de libros leidos por el usuario
+     */
     public List<Libro> listarLibrosLeidos(MySQLConnector con, Integer idUsuario){
         Connection conexion = null;
         try {
@@ -161,6 +206,12 @@ public class ManagerLibro {
         return null;
     }
 
+    /**
+     * Obtener un listado de los libros en lectura por el usuario
+     * @param con conexión a BBDD
+     * @param idUsuario Identificador de usuario
+     * @return listado de libros en lectura por el usuario
+     */
     public List<Libro> listarLibrosenLectura(MySQLConnector con, Integer idUsuario){
         Connection conexion = null;
         try {
