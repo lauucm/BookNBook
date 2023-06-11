@@ -1,4 +1,4 @@
-package org.BookNBook.utilidades.mail.excepciones;
+package org.BookNBook.utilidades.excepciones;
 
 public class PasswordException extends Exception{
     public PasswordException(String message) {

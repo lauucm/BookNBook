@@ -11,8 +11,22 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Clase Manejador Saga para realizar todas las consultas en cuanto a Saga
+ * @author maria.escribano.verde
+ * @author laura.cabrera.mora
+ */
 public class ManagerSaga {
 
+    /**
+     * Añadir una Saga
+     * @param con Conexión a BBDD
+     * @param saga Saga
+     * @return <ul>
+     * <li>true se añade</li>
+     * <li>false no se añade</li>
+     * </ul>
+     */
     public boolean addSaga(MySQLConnector con, Saga saga) {
 
         Connection conexion = null;
@@ -36,6 +50,16 @@ public class ManagerSaga {
         return false;
     }
 
+    /**
+     * Añadir una Saga
+     * @param con Conexión a BBDD
+     * @param idLibro Identificador de libro
+     * @param idSaga Identificador de Saga
+     * @return <ul>
+     * <li>true se añade</li>
+     * <li>false no se añade</li>
+     * </ul>
+     */
     public boolean addLibroSaga(MySQLConnector con, Integer idLibro, Integer idSaga) {
 
         Connection conexion = null;
@@ -60,6 +84,12 @@ public class ManagerSaga {
         return false;
     }
 
+    /**
+     * Obtener listado de libros según la saga
+     * @param con Conexión BBDD
+     * @param id Identificador de saga
+     * @return listado de libros según saga
+     */
     public List<Libro> listarLibrosSaga (MySQLConnector con, Integer id){
         Connection conexion = null;
         try {

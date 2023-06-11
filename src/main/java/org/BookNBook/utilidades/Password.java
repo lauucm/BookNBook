@@ -1,23 +1,35 @@
-package org.BookNBook.utilidades.mail;
+package org.BookNBook.utilidades;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.BookNBook.utilidades.mail.excepciones.PasswordException;
+import org.BookNBook.utilidades.excepciones.PasswordException;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-
+/**
+ * Clase Contraseña
+ * @author maria.escribano.verde
+ * @author laura.cabrera.mora
+ */
 @Data
 @NoArgsConstructor
-public class Password {
+public class Password{
+    /**
+     * Contraseña
+     */
     private String password;
 
+    /**
+     * Constructor de la clase
+     * @param password contraseña
+     */
     public Password(String password) {
         this.password = password;
     }
 
+    /**
+     * Constructor de la clase
+     * @param password contraseña
+     * @param email correo
+     */
     public Password(String password, String email) throws PasswordException {
         try {
             checkPassword(password, email);
@@ -27,6 +39,12 @@ public class Password {
         }
     }
 
+    /**
+     * Comprobar longitud y caracteres que conforman la contraseña
+     * @param password contraseña
+     * @param email correo
+     * @throws PasswordException error
+     */
     public void checkPassword(String password, String email) throws PasswordException {
         if (password.length() < 5) {
             throw new PasswordException("Debe tener minimo 5 caracteres.");

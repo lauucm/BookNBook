@@ -13,35 +13,35 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * Clase Manejador Usuario para realizar todas las consultas en cuanto a usuarios
+ * @author maria.escribano.verde
+ * @author laura.cabrera.mora
  */
 public class ManagerUsuario {
 
     /**
      * Conocer si existe un usuario en la base de datos a partir de su email
-     * @param con
-     * @param email
+     * @param con conexión BBDD
+     * @param correo email usuario
      * @return <ul>
      *     <li>true si existe un usuario con el email</li>ç
      *     <li>false si no existe un usuario con el email</li>
      * </ul>
      *
      */
-    private boolean existeUsuario(MySQLConnector con, String email) {
+    private boolean existeUsuario(MySQLConnector con, String correo) {
 
         Connection conexion = null;
         try {
             conexion = con.getMySQLConnection();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);
         }
 
-        String sql = "SELECT * FROM Usuario WHERE email = ?";
+        String sql = "SELECT * FROM Usuario WHERE correo = ?";
 
         try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
-            stmt.setString(1, email);
+            stmt.setString(1, correo);
 
             ResultSet result = stmt.executeQuery();
             result.beforeFirst();
@@ -54,8 +54,8 @@ public class ManagerUsuario {
 
     /**
      * Ingresar un nuevo usuario dentro de la base datos
-     * @param con
-     * @param usuario
+     * @param con conexión a BBDD
+     * @param usuario usuario
      * @return <ul>
      *     <li>true se ha podido crear un usuario</li>
      *     <li>false si no se ha podido crear un usuario</li>
@@ -66,9 +66,7 @@ public class ManagerUsuario {
         Connection conexion = null;
         try {
             conexion = con.getMySQLConnection();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);
         }
 
@@ -97,9 +95,9 @@ public class ManagerUsuario {
 
     /**
      * Validar si el email y la contraseña introducidos pertenecen al mismo usuario
-     * @param con
-     * @param usuario
-     * @param passwd
+     * @param con conexión a BBDD
+     * @param usuario email usuario
+     * @param passwd contraseña usuario
      * @return <ul>
      *     <li>true si el correo y la contraseña son validos</li>
      *     <li>false si el correo o contraseña no son validos</li>
@@ -110,13 +108,11 @@ public class ManagerUsuario {
         Connection conexion = null;
         try {
             conexion = con.getMySQLConnection();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);
         }
 
-        String sql = "SELECT * FROM Usuario WHERE email=? AND password=?";
+        String sql = "SELECT * FROM Usuario WHERE correo=? AND password=?";
 
         try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
             stmt.setString(1, usuario);
@@ -133,9 +129,9 @@ public class ManagerUsuario {
 
     /**
      * Comprobación del usuario que ha iniciado sesion
-     * @param con
-     * @param usuario
-     * @param passwd
+     * @param con conexión BBDD
+     * @param usuario email usuario
+     * @param passwd contraseña usuario
      * @return <ul>
      *     <li>usuario en caso de ser posible el login dentro de la app</li>
      *     <li>null en caso de no ser posible</li>
@@ -143,52 +139,63 @@ public class ManagerUsuario {
      */
     public Usuario logging(MySQLConnector con, String usuario, String passwd) {
 
+        Usuario usuarioError = new Usuario();
+
         Connection conexion = null;
         try {
             conexion = con.getMySQLConnection();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);
         }
 
         if (validarUsuario(con, usuario, passwd)) {
-            String sql = "SELECT * FROM Usuario WHERE email =? AND password=?";
+            String sql = "SELECT * FROM Usuario WHERE correo =? AND password=?";
             try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
                 stmt.setString(1, usuario);
                 stmt.setString(2, passwd);
                 ResultSet result = stmt.executeQuery();
                 if (result.next()) {
                     System.out.println(
-                            "Inicio de usuario realizado: " + result.getInt("id") + " " + result.getString("email"));
-                    return new Usuario(result);
+                            "Inicio de usuario realizado: " + result.getInt("id") + " " + result.getString("correo"));
+                    Usuario usuarioLog = new Usuario(result);
+                    return usuarioLog;
                 } else {
+                    usuarioError.setMessage("Usuario no encontrado");
                     System.out.println("Usuario no encontrado");
-                    return null;
+                    return usuarioError;
                 }
             } catch (SQLException e) {
                 e.getStackTrace();
             }
         } else {
+            usuarioError.setMessage("Usuario no valido");
             System.out.println("Usuario no valido");
-            return null;
+            return usuarioError;
         }
+        usuarioError.setMessage("Usuario no introducido");
         System.out.println("Usuario no introducido");
-        return null;
+        return usuarioError;
     }
 
+    /**
+     * Borrar un usuario
+     * @param con Conexión BBDD
+     * @param usuario email de usuario
+     * @return <ul>
+     *     <li>true si el usuario ha sido borrado correctamente</li>
+     *     <li>false si el usuario no ha sido borrado</li>
+     * </ul>
+     */
     public boolean deleteUsuario(MySQLConnector con, String usuario) {
 
         Connection conexion = null;
         try {
             conexion = con.getMySQLConnection();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);
         }
 
-        String sql = "DELETE FROM Usuario WHERE email=?";
+        String sql = "DELETE FROM Usuario WHERE correo=?";
 
         try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
             stmt.setString(1, usuario);
@@ -202,13 +209,16 @@ public class ManagerUsuario {
         return false;
     }
 
+    /**
+     * Obtener listado de todos los usuarios registrados
+     * @param con Conexión BBDD
+     * @return listado de todos los usuarios
+     */
     public List<Usuario> listarUsuarios(MySQLConnector con) {
         Connection conexion = null;
         try {
             conexion = con.getMySQLConnection();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);
         }
 

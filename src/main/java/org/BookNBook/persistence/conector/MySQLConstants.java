@@ -1,6 +1,13 @@
 package org.BookNBook.persistence.conector;
 
+/**
+ * Clase MySQL Constants.
+ *
+ */
 public class MySQLConstants {
+    /**
+     * Variables que contienen las constantes para la conexión MySQL
+     */
     public static final String PASSWD = "jdbc.mysql.passwd";
     public static final String USER = "jdbc.mysql.user";
     public static final String DRIVER = "jdbc.mysql.driver";

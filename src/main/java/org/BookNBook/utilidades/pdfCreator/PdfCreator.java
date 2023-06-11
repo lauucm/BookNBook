@@ -28,20 +28,20 @@ import org.BookNBook.persistence.manager.ManagerLibro;
 
 /**
  * Clase PDFCreator para generar un pdf con los datos de las lecturas realizadas por el usuario
- *
  * @author maria.escribano.verde
  * @author laura.cabrera.mora
- *
  */
 @AllArgsConstructor
 @NoArgsConstructor
 public class PdfCreator {
 
+    /**
+     * Manejador de libros
+     */
     ManagerLibro managerLibro;
 
     /**
-     * Metodo para generar pdf y añadirle las tablas necesarias para mostrar los datos de lecturas del usuario
-     *
+     * Generar pdf y añadirle los datos de lecturas del usuario
      * @throws URISyntaxException Error
      * @throws IOException Error
      * @throws MalformedURLException Error
@@ -88,7 +88,7 @@ public class PdfCreator {
             documento.add(parrafo);
 
             /**
-             * Creamos la lista con los libros aun no leídos por el usuario
+             * Lista con los libros aún no leídos por el usuario
              */
             List listaLibros = new List(List.ORDERED);
 
@@ -107,18 +107,6 @@ public class PdfCreator {
             System.out.println(e.getMessage());
         }
         return null;
-    }
-
-    public static void main(String[] args) {
-        try {
-            ManagerLibro managerLibro = new ManagerLibro();
-            PdfCreator pdf = new PdfCreator(managerLibro);
-            MySQLConnector con = new MySQLConnector();
-            System.out.println(pdf.generarPDF(con, 1));
-
-        } catch (URISyntaxException | IOException e) {
-            e.printStackTrace();
-        }
     }
 
 }
