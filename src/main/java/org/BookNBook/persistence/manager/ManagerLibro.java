@@ -3,6 +3,7 @@ package org.BookNBook.persistence.manager;
 import org.BookNBook.persistence.conector.MySQLConnector;
 import org.BookNBook.persistence.dao.Autor;
 import org.BookNBook.persistence.dao.Libro;
+import org.BookNBook.persistence.dao.Usuario;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -35,13 +36,11 @@ public class ManagerLibro {
         Connection conexion = null;
         try {
             conexion = con.getMySQLConnection();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);
         }
 
-        String sql = "SELECT * FROM libros WHERE nombre LIKE ?";
+        String sql = "SELECT libros.*, autor.pseudonimo, saga.nombre FROM libros INNER JOIN autor ON libros.id_autor = autor.id LEFT JOIN saga ON libros.id_saga = saga.id WHERE nombre LIKE ?";
 
         try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
             stmt.setString(1, PERCENT_STR + nombre + PERCENT_STR);
@@ -51,6 +50,39 @@ public class ManagerLibro {
             result.next();
             Libro libro = new Libro(result);
             return libro;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    /**
+     * Obtener un libro según el id
+     * @param con conexión BBDD
+     * @param id Identificador del libro
+     * @return libro en cuestión
+     */
+    public Libro buscarLibro(MySQLConnector con, Integer id) {
+
+        Connection conexion = null;
+        try {
+            conexion = con.getMySQLConnection();
+        } catch (ClassNotFoundException | SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        String sql = "SELECT libros.*, autor.pseudonimo, saga.nombre FROM libros INNER JOIN autor ON libros.id_autor = autor.id LEFT JOIN saga ON libros.id_saga = saga.id WHERE libros.id = ?";
+
+        try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
+            stmt.setInt(1,id);
+            ResultSet result = stmt.executeQuery();
+
+            Libro libro = null;
+            if (result.next()) {
+                libro = new Libro(result);
+                return libro;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -73,9 +105,7 @@ public class ManagerLibro {
         Connection conexion = null;
         try {
             conexion = con.getMySQLConnection();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);
         }
 
@@ -102,27 +132,21 @@ public class ManagerLibro {
     /**
      * Obtener una lista de libros según temática y tipo
      * @param con conexión BBDD
-     * @param tipo tipo de libro
      * @param genero género o temática de libro
      * @return listado de libros según el Tipo y la temática
      */
-    public List<Libro> listarLibrosTipoGenero(MySQLConnector con, String tipo, String genero) {
+    public List<Libro> listarLibrosTipoGenero(MySQLConnector con, String genero) {
         Connection conexion = null;
         try {
             conexion = con.getMySQLConnection();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);
         }
 
-        String sql = "SELECT * FROM libros where libros.tipo LIKE ? and libros.tematica LIKE ?";
+        String sql = "SELECT Libros.*, autor.pseudonimo FROM libros INNER JOIN autor ON libros.id_autor = autor.id where libros.tematica LIKE '" + genero + "'";
 
         try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
-            stmt.setString(1, COMMA_STR + tipo + COMMA_STR);
-            stmt.setString(2, COMMA_STR + genero + COMMA_STR);
             ResultSet result = stmt.executeQuery();
-            result.beforeFirst();
 
             ArrayList<Libro> libros = new ArrayList<>();
             while (result.next()) {
@@ -146,18 +170,15 @@ public class ManagerLibro {
         Connection conexion = null;
         try {
             conexion = con.getMySQLConnection();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);
         }
 
-        String sql = "SELECT * FROM libros inner join dinamica on dinamica.id_libro = libros.id where dinamica.pag_actual <1 AND dinamica.id_usuario = ?";
+        String sql = "SELECT Libros.*, autor.pseudonimo FROM libros INNER JOIN autor ON libros.id_autor = autor.id RIGHT JOIN estadistica ON estadistica.id_libro = libros.id WHERE estadistica.fecha_inicio IS NULL AND estadistica.id_usuario = ?";
 
         try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
             stmt.setInt(1, idUsuario);
             ResultSet result = stmt.executeQuery();
-            result.beforeFirst();
 
             ArrayList<Libro> libros = new ArrayList<>();
             while (result.next()) {
@@ -181,18 +202,15 @@ public class ManagerLibro {
         Connection conexion = null;
         try {
             conexion = con.getMySQLConnection();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);
         }
 
-        String sql = "SELECT * FROM libros inner join dinamica on dinamica.id_libro = libros.id where dinamica.pag_actual = libros.pag_total AND dinamica.id_usuario = ?";
+        String sql = "SELECT Libros.*, autor.pseudonimo FROM libros INNER JOIN autor ON libros.id_autor = autor.id INNER JOIN dinamica on dinamica.id_libro = libros.id WHERE dinamica.pag_actual = libros.pag_total AND dinamica.id_usuario = ?";
 
         try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
             stmt.setInt(1, idUsuario);
             ResultSet result = stmt.executeQuery();
-            result.beforeFirst();
 
             ArrayList<Libro> libros = new ArrayList<>();
             while (result.next()) {
@@ -216,18 +234,15 @@ public class ManagerLibro {
         Connection conexion = null;
         try {
             conexion = con.getMySQLConnection();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);
         }
 
-        String sql = "SELECT * FROM libros inner join dinamica on dinamica.id_libro = libros.id where dinamica.pag_actual > 0 AND dinamica.id_usuario = ?";
+        String sql = "SELECT Libros.*, autor.pseudonimo FROM libros INNER JOIN autor ON libros.id_autor = autor.id INNER JOIN dinamica on dinamica.id_libro = libros.id where dinamica.pag_actual > 0 AND dinamica.pag_actual < libros.pag_total AND dinamica.id_usuario = ?";
 
         try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
             stmt.setInt(1, idUsuario);
             ResultSet result = stmt.executeQuery();
-            result.beforeFirst();
 
             ArrayList<Libro> libros = new ArrayList<>();
             while (result.next()) {
@@ -240,4 +255,35 @@ public class ManagerLibro {
         }
         return null;
     }
+
+    /**
+     * Obtener una lista de libros
+     * @param con conexión BBDD
+     * @return listado de libros
+     */
+    public List<Libro> listarLibros(MySQLConnector con) {
+        Connection conexion = null;
+        try {
+            conexion = con.getMySQLConnection();
+        } catch (ClassNotFoundException | SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        ArrayList<Libro> libros = new ArrayList<>();
+        String sql = "SELECT libros.*, autor.pseudonimo, saga.nombre FROM libros INNER JOIN autor ON libros.id_autor = autor.id INNER JOIN saga ON libros.id_saga = saga.id";
+
+        try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
+            ResultSet result = stmt.executeQuery();
+
+            while (result.next()) {
+                Libro libro = new Libro(result);
+                libros.add(libro);
+            }
+            return libros;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }

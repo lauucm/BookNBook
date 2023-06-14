@@ -3,7 +3,6 @@ package org.BookNBook.persistence.manager;
 import org.BookNBook.persistence.conector.MySQLConnector;
 import org.BookNBook.persistence.dao.Autor;
 import org.BookNBook.persistence.dao.Libro;
-import org.BookNBook.persistence.dao.Saga;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -32,9 +31,7 @@ public class ManagerAutor {
         Connection conexion = null;
         try {
             conexion = con.getMySQLConnection();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);
         }
 
@@ -73,9 +70,7 @@ public class ManagerAutor {
         Connection conexion = null;
         try {
             conexion = con.getMySQLConnection();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);
         }
 
@@ -110,9 +105,7 @@ public class ManagerAutor {
         Connection conexion = null;
         try {
             conexion = con.getMySQLConnection();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);
         }
 
@@ -146,9 +139,7 @@ public class ManagerAutor {
         Connection conexion = null;
         try {
             conexion = con.getMySQLConnection();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);
         }
 
@@ -180,9 +171,7 @@ public class ManagerAutor {
         Connection conexion = null;
         try {
             conexion = con.getMySQLConnection();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);
         }
 

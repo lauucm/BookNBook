@@ -20,13 +20,18 @@ public class LibroServiceImpl implements LibroService {
     }
 
     @Override
+    public Libro buscarLibro(MySQLConnector con, Integer id) {
+        return managerLibro.buscarLibro(con, id);
+    }
+
+    @Override
     public boolean addLibro(MySQLConnector con, Libro libro, Autor autor) {
         return managerLibro.addLibro(con, libro, autor);
     }
 
     @Override
-    public List<Libro> listarLibrosTipoGenero(MySQLConnector con, String tipo, String genero) {
-        return managerLibro.listarLibrosTipoGenero(con, tipo, genero);
+    public List<Libro> listarLibrosTipoGenero(MySQLConnector con, String genero) {
+        return managerLibro.listarLibrosTipoGenero(con, genero);
     }
 
     @Override
@@ -42,5 +47,10 @@ public class LibroServiceImpl implements LibroService {
     @Override
     public List<Libro> listarLibrosenLectura(MySQLConnector con, Integer idUsuario) {
         return managerLibro.listarLibrosenLectura(con, idUsuario);
+    }
+
+    @Override
+    public List<Libro> listarLibros(MySQLConnector con) {
+        return managerLibro.listarLibros(con);
     }
 }

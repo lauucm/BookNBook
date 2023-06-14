@@ -1,5 +1,6 @@
 package org.BookNBook.persistence.dao;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
 import java.sql.ResultSet;
@@ -13,7 +14,7 @@ import java.sql.SQLException;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 public class Dinamica implements Serializable {
     /**
      * Libro

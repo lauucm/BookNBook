@@ -13,9 +13,9 @@ public interface EstadisticaService {
 
     boolean updateCalificacion(MySQLConnector con, Integer idLibro, Integer idUsuario, Double calificacion);
 
-    boolean updateFechaInicio(MySQLConnector con, Integer idLibro, Integer idUsuario, LocalDate fecha);
+    boolean updateFechaInicio(MySQLConnector con, Integer idLibro, Integer idUsuario, String fecha);
 
-    boolean updateFechaFinal(MySQLConnector con, Integer idLibro, Integer idUsuario, LocalDate fecha);
+    boolean updateFechaFinal(MySQLConnector con, Integer idLibro, Integer idUsuario, String fecha);
 
     Double calificacionMedia(MySQLConnector con, Integer idLibro);
 

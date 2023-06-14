@@ -1,8 +1,6 @@
 package org.BookNBook.persistence.manager;
 
 import org.BookNBook.persistence.conector.MySQLConnector;
-import org.BookNBook.persistence.dao.Autor;
-import org.BookNBook.persistence.dao.Libro;
 import org.BookNBook.persistence.dao.Usuario;
 
 import java.sql.Connection;
@@ -149,7 +147,7 @@ public class ManagerUsuario {
         }
 
         if (validarUsuario(con, usuario, passwd)) {
-            String sql = "SELECT * FROM Usuario WHERE correo =? AND password=?";
+            String sql = "SELECT * FROM Usuario WHERE correo = ? AND password = ?";
             try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
                 stmt.setString(1, usuario);
                 stmt.setString(2, passwd);
@@ -180,13 +178,13 @@ public class ManagerUsuario {
     /**
      * Borrar un usuario
      * @param con Conexión BBDD
-     * @param usuario email de usuario
+     * @param usuario Identificador de usuario
      * @return <ul>
      *     <li>true si el usuario ha sido borrado correctamente</li>
      *     <li>false si el usuario no ha sido borrado</li>
      * </ul>
      */
-    public boolean deleteUsuario(MySQLConnector con, String usuario) {
+    public boolean deleteUsuario(MySQLConnector con, Integer usuario) {
 
         Connection conexion = null;
         try {
@@ -195,14 +193,15 @@ public class ManagerUsuario {
             throw new RuntimeException(e);
         }
 
-        String sql = "DELETE FROM Usuario WHERE correo=?";
+        String sql = "DELETE FROM Usuario WHERE id=?";
 
         try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
-            stmt.setString(1, usuario);
-            ResultSet result = stmt.executeQuery();
-            return result.next() ? true : false;
-        } catch (SQLException esql) {
-            System.out.println(esql.getMessage());
+            stmt.setInt(1, usuario);
+            Boolean result = stmt.executeUpdate() > 0;
+            return true;
+        } catch (SQLException eSql) {
+            System.out.println(eSql.getMessage());
+            return false;
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -226,7 +225,6 @@ public class ManagerUsuario {
 
         try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
             ResultSet result = stmt.executeQuery();
-            result.beforeFirst();
 
             ArrayList<Usuario> usuarios = new ArrayList<>();
             while (result.next()) {
@@ -238,6 +236,74 @@ public class ManagerUsuario {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * Comprobación de si existe el email registrado en la BBDD
+     * @param con Conexión BBDD
+     * @param correo email de Usuario
+     * @return <ul>
+     *     <li>true si el email existe</li>
+     *     <li>false si el email no existe</li>
+     * </ul>
+     */
+    public boolean existEmail(MySQLConnector con, String correo){
+        Connection conexion = null;
+        try {
+            conexion = con.getMySQLConnection();
+        } catch (ClassNotFoundException | SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        String sql = "SELECT * FROM Usuario WHERE correo=?";
+
+        try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
+            stmt.setString(1, correo);
+            ResultSet result = stmt.executeQuery();
+            return result.next() ? true : false;
+        } catch (SQLException eSql) {
+            System.out.println(eSql.getMessage());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return false;
+    }
+
+    /**
+     * Obtener un usuario por su id
+     * @param con conexión BBDD
+     * @param id identificador de usuario
+     * @return Usuario específico
+     */
+    public Usuario getUsuario(MySQLConnector con, Integer id) {
+
+        Usuario usuarioError = new Usuario();
+
+        Connection conexion = null;
+        try {
+            conexion = con.getMySQLConnection();
+        } catch (ClassNotFoundException | SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        String sql = "SELECT * FROM Usuario WHERE id = ?";
+            try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
+                stmt.setInt(1, id);
+                ResultSet result = stmt.executeQuery();
+                if (result.next()) {
+                    Usuario usuarioLog = new Usuario(result);
+                    return usuarioLog;
+                } else {
+                    usuarioError.setMessage("Usuario no encontrado");
+                    System.out.println("Usuario no encontrado");
+                    return usuarioError;
+                }
+            } catch (SQLException e) {
+                e.getStackTrace();
+            }
+        usuarioError.setMessage("Usuario no introducido");
+        System.out.println("Usuario no introducido");
+        return usuarioError;
     }
 
 }
