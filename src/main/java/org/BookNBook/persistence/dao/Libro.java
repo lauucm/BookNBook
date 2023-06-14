@@ -1,5 +1,6 @@
 package org.BookNBook.persistence.dao;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
 import java.sql.ResultSet;
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@SuperBuilder
 public class Libro extends Saga implements Serializable {
 
     /**
@@ -35,7 +37,7 @@ public class Libro extends Saga implements Serializable {
     /**
      * Fecha de publicación
      */
-    private LocalDate fechaPublicacion;
+    private String fechaPublicacion;
     /**
      * Calificación media del libro
      */
@@ -70,7 +72,7 @@ public class Libro extends Saga implements Serializable {
      * @param nombreSaga Saga
      * @param url Portada
      */
-    public Libro(int id, String nombre, String pseudonimo, String descripcion, LocalDate fechaPublicacion, Integer paginaTotal, TipologiaLibro tipologiaLibro, TematicaLibro tematicaLibro, String nombreSaga, String url) {
+    public Libro(int id, String nombre, String pseudonimo, String descripcion, String fechaPublicacion, Integer paginaTotal, TipologiaLibro tipologiaLibro, TematicaLibro tematicaLibro, String nombreSaga, String url) {
         super(nombreSaga);
         this.id = id;
         this.nombre = nombre;
@@ -91,15 +93,14 @@ public class Libro extends Saga implements Serializable {
     public Libro(ResultSet result) throws SQLException {
         super(result);
         try {
-
             this.id = result.getInt("id");
             this.nombre = result.getString("nombre");
             this.autor = new Autor(result.getString("pseudonimo"));
             this.descripcion = result.getString("descripcion");
-            this.fechaPublicacion =  LocalDate.parse(result.getString("fecha_publicacion"));
+            this.fechaPublicacion =  result.getString("fecha_publicacion");
             this.paginaTotal = result.getInt("pag_total");
-            this.tipologiaLibro = TipologiaLibro.valueOf(result.getString("tipologiaLibro"));
-            this.tematicaLibro = TematicaLibro.valueOf(result.getString("tematicaLibro"));
+            this.tipologiaLibro = TipologiaLibro.valueOf(result.getString("tipo"));
+            this.tematicaLibro = TematicaLibro.valueOf(result.getString("tematica"));
             this.url = result.getString("url");
         }catch(SQLException e) {
             e.getStackTrace();

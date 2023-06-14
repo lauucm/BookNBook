@@ -29,9 +29,7 @@ public class ManagerEstadistica {
         Connection conexion = null;
         try {
             conexion = con.getMySQLConnection();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);
         }
 
@@ -66,17 +64,15 @@ public class ManagerEstadistica {
         Connection conexion = null;
         try {
             conexion = con.getMySQLConnection();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);
         }
 
-        String sql = "INSERT INTO Estadistica(`id_libro`, `id_usuario`, `fecha_add`) VALUES(?, ?, ?)";
+        String sql = "INSERT INTO estadistica(id_libro, id_usuario, fecha_add) VALUES(?, ?, ?);";
         try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
             stmt.setInt(1, idLibro);
             stmt.setInt(2, idUsuario);
-            stmt.setString(3, new Date().toString());
+            stmt.setString(3, String.valueOf(LocalDate.now()));
             stmt.execute();
             return true;
         } catch (SQLException e) {
@@ -101,9 +97,7 @@ public class ManagerEstadistica {
         Connection conexion = null;
         try {
             conexion = con.getMySQLConnection();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);
         }
 
@@ -132,14 +126,12 @@ public class ManagerEstadistica {
      * <li>false no se ha actualizado</li>
      * </ul>
      */
-    public boolean updateFechaInicio(MySQLConnector con, Integer idLibro, Integer idUsuario, LocalDate fecha) {
+    public boolean updateFechaInicio(MySQLConnector con, Integer idLibro, Integer idUsuario, String fecha) {
 
         Connection conexion = null;
         try {
             conexion = con.getMySQLConnection();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);
         }
 
@@ -168,14 +160,12 @@ public class ManagerEstadistica {
      * <li>false no se ha actualizado</li>
      * </ul>
      */
-    public boolean updateFechaFinal(MySQLConnector con, Integer idLibro, Integer idUsuario, LocalDate fecha) {
+    public boolean updateFechaFinal(MySQLConnector con, Integer idLibro, Integer idUsuario, String fecha) {
 
         Connection conexion = null;
         try {
             conexion = con.getMySQLConnection();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);
         }
 
@@ -203,9 +193,7 @@ public class ManagerEstadistica {
         Connection conexion = null;
         try {
             conexion = con.getMySQLConnection();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);
         }
 

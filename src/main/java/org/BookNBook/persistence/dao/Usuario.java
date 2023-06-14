@@ -1,6 +1,8 @@
 package org.BookNBook.persistence.dao;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
+import org.BookNBook.controller.dao.ErrorMessage;
 
 import java.io.Serializable;
 import java.sql.ResultSet;
@@ -14,7 +16,8 @@ import java.sql.SQLException;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
+@ToString(callSuper = true)
 public class Usuario extends ErrorMessage implements Serializable {
     /**
      * Identificador

@@ -3,11 +3,16 @@ package org.BookNBook.controller;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.BookNBook.controller.dao.ListadoDAO;
+import org.BookNBook.controller.dao.ListadoUsuarioDAO;
 import org.BookNBook.controller.dao.LoginDAO;
+import org.BookNBook.controller.dao.NoDataResponse;
 import org.BookNBook.persistence.conector.MySQLConnector;
 import org.BookNBook.persistence.dao.Usuario;
 import org.BookNBook.persistence.manager.ManagerUsuario;
 import org.BookNBook.service.impl.UsuarioServiceImpl;
+
+import java.util.ArrayList;
 
 /**
  * Controlador para manejar las acciones realizadas con los usuarios
@@ -28,6 +33,7 @@ public class UsuarioController {
     public UsuarioController(){
         usuarioService = new UsuarioServiceImpl(new ManagerUsuario());
     }
+
     /**
      * Loging de un usuario
      * @param usuario email y contraseña de un usuario
@@ -45,7 +51,6 @@ public class UsuarioController {
                 Response.status(400).entity("Usuario no logueado").build();
     }
 
-
     /**
      * Registro o añadido de un usuario
      * @param usuario objeto usuario
@@ -57,10 +62,10 @@ public class UsuarioController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response register(Usuario usuario) {
         MySQLConnector con = new MySQLConnector();
-        return (usuarioService.newUsuario(con, usuario)) ?
-            Response.ok().entity("Usuario registrado correctamente!").build() :
-            Response.status(400).entity("Error al crear el usuario").build();
-
+        Boolean exist = usuarioService.newUsuario(con, usuario);
+        return exist ?
+                Response.ok().entity(NoDataResponse.builder().ok(true).message("Usuario registrado correctamente!").build()).build() :
+                Response.ok().entity(NoDataResponse.builder().ok(false).message("Error al crear el usuario").build()).build();
     }
 
     /**
@@ -72,11 +77,13 @@ public class UsuarioController {
     @Path("/delete/{usuario}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response deleteUsuario(@PathParam("usuario") String usuario) {
+    public Response deleteUsuario(@PathParam("usuario") Integer usuario) {
         MySQLConnector con = new MySQLConnector();
-        return (usuarioService.deleteUsuario(con, usuario)) ?
-                Response.ok().entity("Usuario " + usuario + " eliminado correctamente!").build() :
-                Response.status(400).entity("Error al eliminar el usuario: " + usuario).build();
+        Boolean exist = usuarioService.deleteUsuario(con, usuario);
+        return exist ?
+            Response.ok().entity(NoDataResponse.builder().ok(true).message("Usuario " + usuario + " eliminado correctamente!").build()).build() :
+            Response.ok().entity(NoDataResponse.builder().ok(false).message("Error al eliminar el usuario: " + usuario).build()).build();
+
     }
 
     /**
@@ -89,6 +96,41 @@ public class UsuarioController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response listarUsuarios() {
         MySQLConnector con = new MySQLConnector();
-        return Response.ok().entity(usuarioService.listarUsuarios(con)).build();
+        ListadoUsuarioDAO listado = new ListadoUsuarioDAO();
+        listado.setListado((ArrayList) usuarioService.listarUsuarios(con));
+        listado.setMessage("Listado leido correctamente");
+        return listado != null ?
+                Response.ok().entity(listado).build() :
+                Response.status(400).entity(ListadoDAO.builder().message("Error al leer listado")).build() ;
     }
+
+    @GET
+    @Path("/register/email")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.TEXT_PLAIN)
+    public Response existEmail(@QueryParam("email") String email) {
+        MySQLConnector con = new MySQLConnector();
+        Boolean exist = usuarioService.existEmail(con, email);
+        return exist ?
+                Response.ok().entity(NoDataResponse.builder().ok(true).message("Email ya registrado").build()).build() :
+                Response.ok().entity(NoDataResponse.builder().ok(false).message("Email no registrado").build()).build();
+    }
+
+    /**
+     * Obtener datos de un usuario
+     * @param usuario Identificador del usuario
+     * @return Response con el usuario o con una negativa de dicha acción
+     */
+    @GET
+    @Path("/{usuario}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.TEXT_PLAIN)
+    public Response getUsuario(@PathParam("usuario") Integer usuario) {
+        MySQLConnector con = new MySQLConnector();
+        Usuario usuarioLogin = usuarioService.getUsuario(con, usuario);
+        return usuarioLogin!=null ?
+                Response.status(200).entity(usuarioLogin).build() :
+                Response.status(400).entity("Usuario no encontrado").build();
+    }
+
 }

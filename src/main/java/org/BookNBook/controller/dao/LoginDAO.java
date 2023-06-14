@@ -1,9 +1,9 @@
 package org.BookNBook.controller.dao;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+
+import java.io.Serializable;
 
 /**
  * LoginDAO para gestión de usuarios
@@ -14,7 +14,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginDAO {
+@SuperBuilder
+public class LoginDAO implements Serializable {
 
     /**
      * Email de usuario
@@ -24,4 +25,5 @@ public class LoginDAO {
      * Contraseña de usuario
      */
     String password;
+
 }

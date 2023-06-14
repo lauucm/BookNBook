@@ -32,9 +32,7 @@ public class ManagerSaga {
         Connection conexion = null;
         try {
             conexion = con.getMySQLConnection();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);
         }
 
@@ -65,9 +63,7 @@ public class ManagerSaga {
         Connection conexion = null;
         try {
             conexion = con.getMySQLConnection();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);
         }
 
@@ -94,9 +90,7 @@ public class ManagerSaga {
         Connection conexion = null;
         try {
             conexion = con.getMySQLConnection();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);
         }
 

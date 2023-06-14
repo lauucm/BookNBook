@@ -1,5 +1,6 @@
 package org.BookNBook.service.impl;
 
+import lombok.AllArgsConstructor;
 import org.BookNBook.persistence.conector.MySQLConnector;
 import org.BookNBook.persistence.dao.Estadistica;
 import org.BookNBook.persistence.manager.ManagerEstadistica;
@@ -7,6 +8,7 @@ import org.BookNBook.service.EstadisticaService;
 
 import java.time.LocalDate;
 
+@AllArgsConstructor
 public class EstadisticaServiceImpl implements EstadisticaService {
 
     ManagerEstadistica managerEstadistica;
@@ -27,12 +29,12 @@ public class EstadisticaServiceImpl implements EstadisticaService {
     }
 
     @Override
-    public boolean updateFechaInicio(MySQLConnector con, Integer idLibro, Integer idUsuario, LocalDate fecha) {
+    public boolean updateFechaInicio(MySQLConnector con, Integer idLibro, Integer idUsuario, String fecha) {
         return managerEstadistica.updateFechaInicio(con, idLibro, idUsuario, fecha);
     }
 
     @Override
-    public boolean updateFechaFinal(MySQLConnector con, Integer idLibro, Integer idUsuario, LocalDate fecha) {
+    public boolean updateFechaFinal(MySQLConnector con, Integer idLibro, Integer idUsuario, String fecha) {
         return managerEstadistica.updateFechaFinal(con, idLibro, idUsuario, fecha);
     }
 

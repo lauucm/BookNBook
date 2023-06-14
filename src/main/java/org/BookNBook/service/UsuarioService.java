@@ -13,6 +13,10 @@ public interface UsuarioService {
 
     List<Usuario> listarUsuarios(MySQLConnector con);
 
-    boolean deleteUsuario(MySQLConnector con, String usuario);
+    boolean deleteUsuario(MySQLConnector con, Integer usuario);
+
+    boolean existEmail(MySQLConnector con, String correo);
+
+    Usuario getUsuario(MySQLConnector con, Integer id);
 
 }

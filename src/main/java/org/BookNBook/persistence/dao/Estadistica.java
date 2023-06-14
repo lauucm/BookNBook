@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 /**
  * Clase Estadística
@@ -15,7 +16,7 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 public class Estadistica implements Serializable {
     /**
      * Libro
@@ -32,15 +33,15 @@ public class Estadistica implements Serializable {
     /**
      * Fecha final de lectura
      */
-    private LocalDate fechaFinal;
+    private String fechaFinal;
     /**
      * Fecha de añadido
      */
-    private LocalDate fechaAdd;
+    private String fechaAdd;
     /**
      * Fecha de inicio de lectura
      */
-    private LocalDate fechaInicio;
+    private String fechaInicio;
 
     /**
      * Constructor del autor a partir de la BBDD
@@ -52,9 +53,9 @@ public class Estadistica implements Serializable {
             this.libro = new Libro(result);
             this.usuario = new Usuario(result);
             this.calificacionActual = result.getDouble("calificacion_personal");
-            this.fechaFinal = LocalDate.parse(result.getString("fecha_final"));
-            this.fechaAdd = LocalDate.parse(result.getString("fecha_add"));
-            this.fechaInicio = LocalDate.parse(result.getString("fecha_inicio"));
+            this.fechaFinal = result.getString("fecha_final");
+            this.fechaAdd = result.getString("fecha_add");
+            this.fechaInicio = result.getString("fecha_inicio");
         } catch (SQLException e) {
             e.getStackTrace();
             throw e;

@@ -32,8 +32,17 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public boolean deleteUsuario(MySQLConnector con, String usuario) {
+    public boolean deleteUsuario(MySQLConnector con, Integer usuario) {
         return managerUsuario.deleteUsuario(con, usuario);
     }
 
+    @Override
+    public boolean existEmail(MySQLConnector con, String correo) {
+        return managerUsuario.existEmail(con, correo);
+    }
+
+    @Override
+    public Usuario getUsuario(MySQLConnector con, Integer id) {
+        return managerUsuario.getUsuario(con, id);
+    }
 }
