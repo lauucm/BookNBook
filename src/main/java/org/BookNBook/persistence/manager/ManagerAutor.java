@@ -109,13 +109,12 @@ public class ManagerAutor {
             throw new RuntimeException(e);
         }
 
-        String sql = "SELECT * FROM autor WHERE pseudonimo LIKE ?";
+        String sql = "SELECT * FROM autor WHERE pseudonimo LIKE CONCAT( '%',?,'%')";
 
         try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
-            stmt.setString(1, "%" + pseudonimo + "%");
+            stmt.setString(1, pseudonimo);
             ResultSet result = stmt.executeQuery();
 
-            result.beforeFirst();
             result.next();
             Autor autor = new Autor(result);
             return autor;
@@ -143,12 +142,12 @@ public class ManagerAutor {
             throw new RuntimeException(e);
         }
 
-        String sql = "SELECT libros.* from libros inner join autor on libros.autor= autor.id where autor.id=? ";
+        String sql = "SELECT libros.*, autor.pseudonimo FROM libros INNER JOIN autor ON libros.id_autor = autor.id LEFT JOIN saga ON libros.id_saga = saga.id where autor.id=? ";
 
         try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
             stmt.setInt(1, id);
             ResultSet result = stmt.executeQuery();
-            result.beforeFirst();
+
             ArrayList<Libro> libros = new ArrayList<>();
             while (result.next()) {
                 Libro libro = new Libro(result);
@@ -179,7 +178,7 @@ public class ManagerAutor {
 
         try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
             ResultSet result = stmt.executeQuery();
-            result.beforeFirst();
+
             ArrayList<Autor> autores = new ArrayList<>();
             while (result.next()) {
                 Autor autor = new Autor(result);

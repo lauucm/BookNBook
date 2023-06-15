@@ -3,16 +3,15 @@ package org.BookNBook.controller;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.BookNBook.controller.dao.CalificacionDAO;
+import org.BookNBook.controller.dao.EstadisticaCalificacionDAO;
 import org.BookNBook.controller.dao.EstadisticaDAO;
 import org.BookNBook.controller.dao.NoDataResponse;
 import org.BookNBook.persistence.conector.MySQLConnector;
 import org.BookNBook.persistence.dao.Estadistica;
-import org.BookNBook.persistence.dao.Usuario;
 import org.BookNBook.persistence.manager.ManagerEstadistica;
 import org.BookNBook.service.EstadisticaService;
 import org.BookNBook.service.impl.EstadisticaServiceImpl;
-
-import java.time.LocalDate;
 
 /**
  * Controlador para manejar las acciones realizadas con las estadísticas
@@ -31,21 +30,22 @@ public class EstadisticaController {
         estadisticaService = new EstadisticaServiceImpl(new ManagerEstadistica());
     }
 
+
     /**
-     * Obtener datos d eestadística específicos para un usuario con un libro
-     * @param idLibro Identificador de libro
-     * @param idUsuario Identificador de usuario
+     * Obtener datos de estadística específicos para un usuario con un libro
+     * @param dato Identificador de libro + Identificador de usuario
      * @return Response con los datos de estadísticas o con una negativa de la búsqueda realizada
      */
-    @GET
-    @Path("/{idUsuario}/{idLibro}")
+    @POST
+    @Path("/obtener")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response getEstadistica(@PathParam(value="idLibro") Integer idLibro, @PathParam(value="idUsuario") Integer idUsuario) {
+    public Response buscarEstadistica(EstadisticaDAO dato) {
         MySQLConnector con = new MySQLConnector();
-        Estadistica estadistica = estadisticaService.getEstadistica(con, idLibro, idUsuario);
-        return (estadistica != null) ?  Response.ok().entity(estadistica).build() :
-                Response.noContent().entity("Usuario " + idUsuario + " o libro " + idLibro + " no encontrado" ).build();
+        Estadistica estadistica = estadisticaService.getEstadistica(con, dato.getIdLibro(), dato.getIdUsuario());
+        return (estadistica != null) ?
+                Response.status(200).entity(estadistica).build() :
+                Response.status(400).entity("Usuario o libro no encontrado").build();
     }
 
     /**
@@ -67,36 +67,33 @@ public class EstadisticaController {
 
     /**
      * Actualizar la calificación personal del usuario con un libro
-     * @param idLibro Identificador de libro
-     * @param idUsuario Identificador de usuario
-     * @param calificacion Calificación personal del usuario
+     * @param dato Identificador de libro + Identificador de usuario + Calificación personal del usuario
      * @return Response con una afirmativa o negativa sobre la actualización
      */
     @POST
-    @Path("/{idUsuario}/{idLibro}/updatecalificacion")
+    @Path("/updateCalificacion")
     @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.TEXT_PLAIN)
-    public Response updateCalificacion(@PathParam(value="idLibro") Integer idLibro, @PathParam(value="idUsuario") Integer idUsuario, Double calificacion) {
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateCalificacion(EstadisticaCalificacionDAO dato) {
         MySQLConnector con = new MySQLConnector();
-        return (estadisticaService.updateCalificacion(con, idLibro, idUsuario, calificacion)) ?
-                Response.ok().entity("Calificacion actualizadas").build() :
-                Response.notModified().entity("Calificacion no actualizadas").build();
+        Boolean exist = estadisticaService.updateCalificacion(con, dato.getIdLibro(), dato.getIdUsuario(), dato.getCalificacion());
+        return exist ?
+                Response.ok().entity(NoDataResponse.builder().ok(true).message("Calificacion actualizadas").build()).build() :
+                Response.status(400).entity(NoDataResponse.builder().ok(false).message("Calificacion no actualizadas").build()).build();
     }
 
     /**
      * Actualización de la fecha de inicio de lectura
-     * @param idLibro Identificador de libro
-     * @param idUsuario Identificador de usuario
-     * @param fecha Fecha de inicio de lectura
+     * @param dato Identificador de libro + Identificador de usuario + Fecha de inicio de lectura
      * @return Response con la afirmativa o negativa de la actualización
      */
     @POST
-    @Path("/{idUsuario}/{idLibro}/updatefechaInicio")
+    @Path("/updatefechaInicio")
     @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.TEXT_PLAIN)
-    public Response updateFechaInicio(@PathParam(value="idLibro") Integer idLibro, @PathParam(value="idUsuario") Integer idUsuario, String fecha) {
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateFechaInicio(EstadisticaDAO dato) {
         MySQLConnector con = new MySQLConnector();
-        Boolean exist = estadisticaService.updateFechaInicio(con, idLibro, idUsuario, fecha);
+        Boolean exist = estadisticaService.updateFechaInicio(con, dato.getIdUsuario(), dato.getIdLibro(), dato.getFecha());
         return exist ?
                 Response.ok().entity(NoDataResponse.builder().ok(true).message("Actualización realizada").build()).build() :
                 Response.ok().entity(NoDataResponse.builder().ok(false).message("Fallo de actualización").build()).build();
@@ -104,18 +101,16 @@ public class EstadisticaController {
 
     /**
      * Actualización de la fecha de fin de lectura
-     * @param idLibro Identificador de libro
-     * @param idUsuario Identificador de usuario
-     * @param fecha Fecha de fin de lectura
+     * @param dato Identificador de libro + Identificador de usuario + Fecha de inicio de lectura
      * @return Response con la afirmativa o negativa de la actualización
      */
     @POST
-    @Path("/{idUsuario}/{idLibro}/updatefechaFinal")
+    @Path("/updatefechaFinal")
     @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.TEXT_PLAIN)
-    public Response updateFechaFinal(@PathParam(value="idLibro") Integer idLibro, @PathParam(value="idUsuario") Integer idUsuario, String fecha) {
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateFechaFinal(EstadisticaDAO dato) {
         MySQLConnector con = new MySQLConnector();
-        Boolean exist = estadisticaService.updateFechaFinal(con, idLibro, idUsuario, fecha);
+        Boolean exist = estadisticaService.updateFechaFinal(con, dato.getIdUsuario(), dato.getIdLibro(), dato.getFecha());
         return exist ?
                 Response.ok().entity(NoDataResponse.builder().ok(true).message("Actualización realizada").build()).build() :
                 Response.ok().entity(NoDataResponse.builder().ok(false).message("Fallo de actualización").build()).build();
@@ -133,9 +128,10 @@ public class EstadisticaController {
     public Response calificacionMedia(@PathParam(value="idLibro") Integer idLibro) {
         MySQLConnector con = new MySQLConnector();
         Double calificacionavg = estadisticaService.calificacionMedia(con, idLibro);
-        return (calificacionavg != null) ?
-                Response.ok().entity(calificacionavg).build() :
-                Response.notModified().entity("Calificacion no encontrada").build();
+        CalificacionDAO calificacion = new CalificacionDAO(calificacionavg);
+        return (calificacion != null) ?
+                Response.status(200).entity(calificacion).build() :
+                Response.status(400).entity("Estadistica no encontrada").build();
     }
 
 }

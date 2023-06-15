@@ -94,18 +94,46 @@ public class ManagerSaga {
             throw new RuntimeException(e);
         }
 
-        String sql= "SELECT libros.* FROM saga inner join libros on saga.id = libros.id_saga where saga.id = ?";
+        String sql= "SELECT Libros.*, autor.pseudonimo FROM libros INNER JOIN autor ON libros.id_autor = autor.id INNER JOIN saga on saga.id = libros.id_saga where saga.id = ?";
 
         try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
             stmt.setInt(1, id);
             ResultSet result = stmt.executeQuery();
-            result.beforeFirst();
             ArrayList<Libro> libros = new ArrayList<>();
             while (result.next()) {
                 Libro libro = new Libro(result);
                 libros.add(libro);
             }
             return libros;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    /**
+     * Obtener listado de libros según la saga
+     * @return listado de libros según saga
+     */
+    public List<Saga> listarSaga (MySQLConnector con){
+        Connection conexion = null;
+        try {
+            conexion = con.getMySQLConnection();
+        } catch (ClassNotFoundException | SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        String sql= "SELECT * FROM saga";
+
+        try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
+            ResultSet result = stmt.executeQuery();
+            ArrayList<Saga> sagas = new ArrayList<>();
+            while (result.next()) {
+                Saga saga = new Saga(result);
+                sagas.add(saga);
+            }
+            return sagas;
         } catch (SQLException e) {
             e.printStackTrace();
         }

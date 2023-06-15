@@ -5,18 +5,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.BookNBook.persistence.dao.Autor;
 import org.BookNBook.persistence.dao.Libro;
 
 import java.io.Serializable;
-import java.util.List;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @SuperBuilder
-public class ListadoDAO extends ErrorMessage implements Serializable {
+public class AddLibroDAO extends ErrorMessage implements Serializable {
 
-    private List<Libro> listado;
+    private Libro libro;
+    private Autor autor;
 
 }

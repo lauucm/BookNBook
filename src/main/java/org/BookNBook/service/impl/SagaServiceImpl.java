@@ -28,4 +28,9 @@ public class SagaServiceImpl implements SagaService{
     public List<Libro> ListarLibrosSaga (MySQLConnector con, Integer id){
         return managerSaga.listarLibrosSaga(con, id);
     }
+
+    @Override
+    public List<Saga> listarSaga(MySQLConnector con) {
+        return managerSaga.listarSaga(con);
+    }
 }

@@ -1,5 +1,6 @@
 package org.BookNBook.service;
 
+import lombok.AllArgsConstructor;
 import org.BookNBook.persistence.conector.MySQLConnector;
 import org.BookNBook.persistence.dao.Dinamica;
 

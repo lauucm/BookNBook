@@ -38,7 +38,7 @@ public class ManagerDinamica {
             stmt.setInt(2, idUsuario);
 
             ResultSet result = stmt.executeQuery();
-            result.beforeFirst();
+
             result.next();
             return new Dinamica(result);
         } catch (SQLException e) {
@@ -137,7 +137,7 @@ public class ManagerDinamica {
             stmt.setInt(1, idUsuario);
 
             ResultSet result = stmt.executeQuery();
-            result.beforeFirst();
+
             result.next();
             return result.getInt("paginas");
         } catch (SQLException e) {

@@ -83,7 +83,6 @@ public class UsuarioController {
         return exist ?
             Response.ok().entity(NoDataResponse.builder().ok(true).message("Usuario " + usuario + " eliminado correctamente!").build()).build() :
             Response.ok().entity(NoDataResponse.builder().ok(false).message("Error al eliminar el usuario: " + usuario).build()).build();
-
     }
 
     /**

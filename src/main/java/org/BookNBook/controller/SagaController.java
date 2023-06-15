@@ -3,17 +3,21 @@ package org.BookNBook.controller;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import lombok.AllArgsConstructor;
+import org.BookNBook.controller.dao.ListadoDAO;
+import org.BookNBook.controller.dao.ListadoSagaDAO;
+import org.BookNBook.controller.dao.NoDataResponse;
+import org.BookNBook.controller.dao.SagaDAO;
 import org.BookNBook.persistence.conector.MySQLConnector;
 import org.BookNBook.persistence.dao.Saga;
+import org.BookNBook.persistence.manager.ManagerSaga;
 import org.BookNBook.service.SagaService;
+import org.BookNBook.service.impl.SagaServiceImpl;
 
 /**
  * Controlador para manejar las acciones realizadas con las sagas
  * @author maria.escribano.verde
  * @author laura.cabrera.mora
  */
-@AllArgsConstructor
 @Path("/saga")
 public class SagaController {
 
@@ -21,6 +25,10 @@ public class SagaController {
      * Clase servicio
      */
     private SagaService sagaService;
+
+    public SagaController(){
+        sagaService = new SagaServiceImpl(new ManagerSaga());
+    }
 
     /**
      * Añadir una saga
@@ -33,26 +41,27 @@ public class SagaController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addSaga(Saga saga) {
         MySQLConnector con = new MySQLConnector();
-        return (sagaService.addSaga(con, saga)) ?
-                Response.ok().entity("Saga añadida correctamente").build() :
-                Response.notModified().entity("La Saga no se ha añadido").build();
+        Boolean exist = sagaService.addSaga(con, saga);
+        return exist ?
+                Response.ok().entity(NoDataResponse.builder().ok(true).message("Saga añadida correctamente").build()).build() :
+                Response.ok().entity(NoDataResponse.builder().ok(false).message("Saga no se ha añadido").build()).build();
     }
 
     /**
      * Añadir un libro a una saga
-     * @param idLibro Identificador de libro
-     * @param idSaga Identificador de Saga
+     * @param saga Identificador de libro + Identificador de Saga
      * @return Response con un texto afirmativo o negativo según se añade o no un libro a una saga
      */
     @POST
-    @Path("/{idSaga}/add")
+    @Path("/add/libro")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addLibroSaga(Integer idLibro, @PathParam(value="idSaga") Integer idSaga) {
+    public Response addLibroSaga(SagaDAO saga) {
         MySQLConnector con = new MySQLConnector();
-        return (sagaService.addLibroSaga(con, idLibro, idSaga)) ?
-                Response.ok().entity("Libro añadido a la saga correctamente").build() :
-                Response.notModified().entity("El libro no se ha añadido a la saga").build();
+        Boolean exist = sagaService.addLibroSaga(con, saga.getIdLibro(), saga.getIdSaga());
+        return exist ?
+                Response.ok().entity(NoDataResponse.builder().ok(true).message("Libro añadido correctamente").build()).build() :
+                Response.ok().entity(NoDataResponse.builder().ok(false).message("Libro no se ha añadido").build()).build();
     }
 
     /**
@@ -63,9 +72,32 @@ public class SagaController {
     @GET
     @Path("/{idSaga}/libros")
     @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.TEXT_PLAIN)
     public Response ListarLibrosSaga(@PathParam(value="idSaga") Integer idSaga) {
         MySQLConnector con = new MySQLConnector();
-        return Response.ok().entity(sagaService.ListarLibrosSaga(con, idSaga)).build();
+        ListadoDAO listado = new ListadoDAO();
+        listado.setListado(sagaService.ListarLibrosSaga(con, idSaga));
+        listado.setMessage("Listado leido correctamente");
+        return listado != null ?
+                Response.ok().entity(listado).build() :
+                Response.status(400).entity(ListadoDAO.builder().message("Error al leer listado")).build() ;
+    }
+
+    /**
+     * Obtiene los libros de una saga determinada
+     * @return Response con una lista de los libros de una saga
+     */
+    @GET
+    @Path("/sagas")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.TEXT_PLAIN)
+    public Response ListarSaga() {
+        MySQLConnector con = new MySQLConnector();
+        ListadoSagaDAO listado = new ListadoSagaDAO();
+        listado.setListado(sagaService.listarSaga(con));
+        listado.setMessage("Listado leido correctamente");
+        return listado != null ?
+                Response.ok().entity(listado).build() :
+                Response.status(400).entity(ListadoSagaDAO.builder().message("Error al leer listado")).build() ;
     }
 }
