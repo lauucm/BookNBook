@@ -21,10 +21,17 @@ import lombok.Setter;
  * @author laura.cabrera.mora
  */
 public class Sender {
+
+    /**
+     *
+     */
     @Setter
     @Getter
     Properties mailProp = new Properties();
 
+    /**
+     *
+     */
     @Setter
     @Getter
     Properties credentialProp = new Properties();
@@ -91,12 +98,6 @@ public class Sender {
             mex.printStackTrace();
             return false;
         }
-
-    }
-
-    public static void main(String[] args) throws IOException {
-        new Sender().send("booknbook2023@gmail.com", "booknbook2023@gmail.com", "Prueba BookNBook",
-                "Prueba");
 
     }
 

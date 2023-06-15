@@ -5,14 +5,27 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
 
+/**
+ * @author m.escribano.verde
+ * @author l.cabrera.mora
+ * @date 2023/06/15
+ */
 @Provider
 public class JsonProcessingExceptionMapper implements ExceptionMapper<JsonProcessingException> {
 
+    /**
+     *
+     */
     public static class Error {
         public String key;
         public String message;
     }
 
+    /**
+     *
+     * @param exception
+     * @return
+     */
     @Override
     public Response toResponse(JsonProcessingException exception) {
         Error error = new Error();

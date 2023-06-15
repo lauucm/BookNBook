@@ -1,4 +1,4 @@
-package org.BookNBook.controller.dao;
+package org.BookNBook.controller.dto;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;

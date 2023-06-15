@@ -3,10 +3,7 @@ package org.BookNBook.controller;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import org.BookNBook.controller.dao.CalificacionDAO;
-import org.BookNBook.controller.dao.EstadisticaCalificacionDAO;
-import org.BookNBook.controller.dao.EstadisticaDAO;
-import org.BookNBook.controller.dao.NoDataResponse;
+import org.BookNBook.controller.dto.*;
 import org.BookNBook.persistence.conector.MySQLConnector;
 import org.BookNBook.persistence.dao.Estadistica;
 import org.BookNBook.persistence.manager.ManagerEstadistica;
@@ -57,7 +54,7 @@ public class EstadisticaController {
     @Path("/add")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addEstadistica(EstadisticaDAO dato) {
+    public Response addEstadistica(EstadisticaSinFechaDAO dato) {
         MySQLConnector con = new MySQLConnector();
         Boolean exist = estadisticaService.addEstadistica(con, dato.getIdLibro(), dato.getIdUsuario());
         return exist ?

@@ -1,5 +1,6 @@
 package org.BookNBook.persistence.manager;
 
+import org.BookNBook.controller.dto.SagaDAO;
 import org.BookNBook.persistence.conector.MySQLConnector;
 import org.BookNBook.persistence.dao.Libro;
 import org.BookNBook.persistence.dao.Saga;
@@ -58,7 +59,7 @@ public class ManagerSaga {
      * <li>false no se añade</li>
      * </ul>
      */
-    public boolean addLibroSaga(MySQLConnector con, Integer idLibro, Integer idSaga) {
+    public boolean addLibroSaga(MySQLConnector con, SagaDAO saga) {
 
         Connection conexion = null;
         try {
@@ -70,8 +71,8 @@ public class ManagerSaga {
         String sql = "UPDATE Libros SET libros.id_saga = ? WHERE libros.id = ?";
 
         try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
-            stmt.setInt(1, idSaga);
-            stmt.setInt(2, idLibro);
+            stmt.setInt(1, saga.getIdSaga());
+            stmt.setInt(2, saga.getIdLibro());
             stmt.execute();
             return true;
         } catch (SQLException e) {
