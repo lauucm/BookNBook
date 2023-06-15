@@ -25,6 +25,7 @@ import lombok.NoArgsConstructor;
 import org.BookNBook.persistence.dao.Libro;
 import org.BookNBook.persistence.conector.MySQLConnector;
 import org.BookNBook.persistence.manager.ManagerLibro;
+import org.BookNBook.persistence.manager.ManagerUsuario;
 
 /**
  * Clase PDFCreator para generar un pdf con los datos de las lecturas realizadas por el usuario
@@ -49,6 +50,7 @@ public class PdfCreator {
     public String generarPDF(MySQLConnector con, int idUsuario)
             throws URISyntaxException, MalformedURLException, IOException {
         Document documento = new Document();
+        managerLibro = new ManagerLibro();
         try {
             Connection con2 = con.getMySQLConnection();
 
@@ -92,9 +94,11 @@ public class PdfCreator {
              */
             List listaLibros = new List(List.ORDERED);
 
+
             ArrayList<Libro> libros = (ArrayList<Libro>) managerLibro.listarLibrosNoLeidos(con,idUsuario);
             for (Libro l : libros) {
-                listaLibros.add(new ListItem(String.valueOf(l)));
+                System.out.println(l.getNombre().toString());
+                listaLibros.add(new ListItem(l.getNombre()).toString());
             }
 
 
@@ -107,6 +111,11 @@ public class PdfCreator {
             System.out.println(e.getMessage());
         }
         return null;
+    }
+
+    public static void main(String[] args) throws DocumentException, IOException, URISyntaxException {
+        MySQLConnector con = new MySQLConnector();
+        new PdfCreator().generarPDF(con, 5);
     }
 
 }
