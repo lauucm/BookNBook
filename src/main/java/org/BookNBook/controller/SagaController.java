@@ -3,10 +3,10 @@ package org.BookNBook.controller;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import org.BookNBook.controller.dao.ListadoDAO;
-import org.BookNBook.controller.dao.ListadoSagaDAO;
-import org.BookNBook.controller.dao.NoDataResponse;
-import org.BookNBook.controller.dao.SagaDAO;
+import org.BookNBook.controller.dto.ListadoDAO;
+import org.BookNBook.controller.dto.ListadoSagaDAO;
+import org.BookNBook.controller.dto.NoDataResponse;
+import org.BookNBook.controller.dto.SagaDAO;
 import org.BookNBook.persistence.conector.MySQLConnector;
 import org.BookNBook.persistence.dao.Saga;
 import org.BookNBook.persistence.manager.ManagerSaga;
@@ -58,7 +58,7 @@ public class SagaController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addLibroSaga(SagaDAO saga) {
         MySQLConnector con = new MySQLConnector();
-        Boolean exist = sagaService.addLibroSaga(con, saga.getIdLibro(), saga.getIdSaga());
+        Boolean exist = sagaService.addLibroSaga(con, saga);
         return exist ?
                 Response.ok().entity(NoDataResponse.builder().ok(true).message("Libro añadido correctamente").build()).build() :
                 Response.ok().entity(NoDataResponse.builder().ok(false).message("Libro no se ha añadido").build()).build();

@@ -3,16 +3,16 @@ package org.BookNBook.controller;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import org.BookNBook.controller.dao.ListadoDAO;
-import org.BookNBook.controller.dao.ListadoUsuarioDAO;
-import org.BookNBook.controller.dao.LoginDAO;
-import org.BookNBook.controller.dao.NoDataResponse;
+import org.BookNBook.controller.dto.ListadoDAO;
+import org.BookNBook.controller.dto.ListadoUsuarioDAO;
+import org.BookNBook.controller.dto.LoginDAO;
+import org.BookNBook.controller.dto.NoDataResponse;
 import org.BookNBook.persistence.conector.MySQLConnector;
 import org.BookNBook.persistence.dao.Usuario;
 import org.BookNBook.persistence.manager.ManagerUsuario;
 import org.BookNBook.service.impl.UsuarioServiceImpl;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Controlador para manejar las acciones realizadas con los usuarios
@@ -96,7 +96,7 @@ public class UsuarioController {
     public Response listarUsuarios() {
         MySQLConnector con = new MySQLConnector();
         ListadoUsuarioDAO listado = new ListadoUsuarioDAO();
-        listado.setListado((ArrayList) usuarioService.listarUsuarios(con));
+        listado.setListado((List) usuarioService.listarUsuarios(con));
         listado.setMessage("Listado leido correctamente");
         return listado != null ?
                 Response.ok().entity(listado).build() :

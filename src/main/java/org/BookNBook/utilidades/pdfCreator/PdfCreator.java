@@ -113,9 +113,10 @@ public class PdfCreator {
         return null;
     }
 
-    public static void main(String[] args) throws DocumentException, IOException, URISyntaxException {
+    public static void main(String[] args) throws URISyntaxException, IOException {
         MySQLConnector con = new MySQLConnector();
-        new PdfCreator().generarPDF(con, 5);
+        PdfCreator pdfCreator = new PdfCreator();
+        pdfCreator.generarPDF(con, 5);
     }
 
 }

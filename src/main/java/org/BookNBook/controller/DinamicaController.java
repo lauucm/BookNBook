@@ -4,8 +4,8 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import lombok.AllArgsConstructor;
-import org.BookNBook.controller.dao.DinamicaDAO;
-import org.BookNBook.controller.dao.NoDataResponse;
+import org.BookNBook.controller.dto.DinamicaDAO;
+import org.BookNBook.controller.dto.NoDataResponse;
 import org.BookNBook.persistence.conector.MySQLConnector;
 import org.BookNBook.persistence.dao.Dinamica;
 import org.BookNBook.persistence.manager.ManagerDinamica;
@@ -96,10 +96,12 @@ public class DinamicaController {
     @Consumes(MediaType.TEXT_PLAIN)
     public Response paginasLeidas(@PathParam(value="idUsuario") Integer idUsuario) {
         MySQLConnector con = new MySQLConnector();
-        Integer paginas = dinamicaService.paginasLeidas(con, idUsuario);
-        return paginas != null?
-                Response.status(200).entity(paginas).build() :
-                Response.status(400).entity("Usuario no encontrado").build();
+        DinamicaDAO paginas = new DinamicaDAO();
+        paginas.setPagActual(dinamicaService.paginasLeidas(con, idUsuario));
+        paginas.setMessage("Dinamica leida correctamente");
+        return paginas.getPagActual() != null?
+                Response.ok().entity(paginas).build() :
+                Response.status(400).entity(DinamicaDAO.builder().message("Error al leer dinamica")).build() ;
     }
 
 }

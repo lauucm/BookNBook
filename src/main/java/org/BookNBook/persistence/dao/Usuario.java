@@ -2,7 +2,7 @@ package org.BookNBook.persistence.dao;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.BookNBook.controller.dao.ErrorMessage;
+import org.BookNBook.controller.dto.ErrorMessage;
 
 import java.io.Serializable;
 import java.sql.ResultSet;
@@ -68,6 +68,11 @@ public class Usuario extends ErrorMessage implements Serializable {
     }
 
 
+    /**
+     *
+     * @param result
+     * @throws SQLException
+     */
     public Usuario(ResultSet result) throws SQLException {
         try {
             this.id = result.getInt("id");
