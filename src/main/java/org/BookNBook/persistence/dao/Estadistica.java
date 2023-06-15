@@ -50,8 +50,12 @@ public class Estadistica implements Serializable {
      */
     public Estadistica(ResultSet result) throws SQLException {
         try {
-            this.libro = new Libro(result);
-            this.usuario = new Usuario(result);
+            Libro libro = new Libro();
+            libro.setId(result.getInt("id_libro"));
+            this.libro = libro;
+            Usuario usuario = new Usuario();
+            usuario.setId(result.getInt("id_usuario"));
+            this.usuario = usuario;
             this.calificacionActual = result.getDouble("calificacion_personal");
             this.fechaFinal = result.getString("fecha_final");
             this.fechaAdd = result.getString("fecha_add");

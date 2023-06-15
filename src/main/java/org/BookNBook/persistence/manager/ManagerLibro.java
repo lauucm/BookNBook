@@ -17,15 +17,6 @@ import java.util.List;
 public class ManagerLibro {
 
     /**
-     * Constante comas para texto
-     */
-    private final static String COMMA_STR = "'";
-    /**
-     * Constante porcentaje para texto
-     */
-    private final static String PERCENT_STR = "%";
-
-    /**
      * Obtener un libro según el nombre
      * @param con conexión BBDD
      * @param nombre nombre del libro
@@ -40,13 +31,12 @@ public class ManagerLibro {
             throw new RuntimeException(e);
         }
 
-        String sql = "SELECT libros.*, autor.pseudonimo, saga.nombre FROM libros INNER JOIN autor ON libros.id_autor = autor.id LEFT JOIN saga ON libros.id_saga = saga.id WHERE nombre LIKE ?";
+        String sql = "SELECT libros.*, autor.pseudonimo, saga.nombre FROM libros INNER JOIN autor ON libros.id_autor = autor.id LEFT JOIN saga ON libros.id_saga = saga.id WHERE libros.nombre LIKE CONCAT( '%',?,'%')";
 
         try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
-            stmt.setString(1, PERCENT_STR + nombre + PERCENT_STR);
+            stmt.setString(1, nombre);
             ResultSet result = stmt.executeQuery();
 
-            result.beforeFirst();
             result.next();
             Libro libro = new Libro(result);
             return libro;

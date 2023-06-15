@@ -3,7 +3,10 @@ package org.BookNBook.controller;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.BookNBook.controller.dao.AddLibroDAO;
+import org.BookNBook.controller.dao.BuscarDAO;
 import org.BookNBook.controller.dao.ListadoDAO;
+import org.BookNBook.controller.dao.NoDataResponse;
 import org.BookNBook.persistence.conector.MySQLConnector;
 import org.BookNBook.persistence.dao.Libro;
 import org.BookNBook.persistence.manager.ManagerLibro;
@@ -37,34 +40,34 @@ public class LibroController {
      * @param nombre nombre del libro
      * @return Response con el libro en cuestión o una negativa de la búsqueda realizada
      */
-    @GET
-    @Path("/{nombre}")
+    @POST
+    @Path("/buscar")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response buscarLibro(@PathParam(value="nombre") String nombre) {
+    public Response buscarLibro(BuscarDAO nombre) {
         MySQLConnector con = new MySQLConnector();
-        nombre = nombre.replaceAll("_"," ");
-        Libro libro = libroService.buscarLibro(con, nombre);
-        return (libro != null) ?  Response.ok().entity(libro).build() :
-                Response.noContent().entity("El libro "+ libro + "no se ha encontrado").build();
+        Libro libro = libroService.buscarLibro(con, nombre.getDato());
+        return (libro != null) ?
+                Response.status(200).entity(libro).build() :
+                Response.status(400).entity("Libro no encontrado").build();
     }
 
-//    /**
-//     * Añadir un libro
-//     * @param libro libro a añadir
-//     * @param autor autor del libro
-//     * @return Response con una afirmativa o negativa sobre el añadido del libro
-//     */
-//    @POST
-//    @Path("/add")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    public Response addLibro(Libro libro, Autor autor) {
-//        MySQLConnector con = new MySQLConnector();
-//        return (libroService.addLibro(con, libro, autor)) ?
-//                Response.ok().entity("Libro añadido correctamente").build() :
-//                Response.notModified().entity("El libro mo se ha añadido").build();
-//    }
+    /**
+     * Añadir un libro
+     * @param libro libro a añadir con autor
+     * @return Response con una afirmativa o negativa sobre el añadido del libro
+     */
+    @POST
+    @Path("/add")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response addLibro(AddLibroDAO libro) {
+        MySQLConnector con = new MySQLConnector();
+        Boolean exist = libroService.addLibro(con, libro.getLibro(), libro.getAutor());
+        return exist ?
+                Response.ok().entity(NoDataResponse.builder().ok(true).message(libro.getLibro().getNombre() + " añadido correctamente!").build()).build() :
+                Response.ok().entity(NoDataResponse.builder().ok(false).message("Error al añadir  el libro").build()).build();
+    }
 
     /**
      * Obtener un listado de las lecturas según tipo y género
@@ -75,7 +78,7 @@ public class LibroController {
     @Path("/listado/{genero}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.TEXT_PLAIN)
-    public Response listarLibrosTipoGenero(@PathParam(value="genero")  String genero) {
+    public Response listarLibrosTipoGenero(@PathParam(value="genero") String genero) {
         MySQLConnector con = new MySQLConnector();
         ListadoDAO listado = new ListadoDAO();
         listado.setListado((ArrayList) libroService.listarLibrosTipoGenero(con, genero));
@@ -172,8 +175,9 @@ public class LibroController {
     public Response buscarLibro(@PathParam(value="id") Integer id) {
         MySQLConnector con = new MySQLConnector();
         Libro libro = libroService.buscarLibro(con, id);
-        return (libro != null) ?  Response.ok().entity(libro).build() :
-                Response.noContent().entity("El libro " + id + "no se ha encontrado").build();
+        return (libro != null) ?
+                Response.status(200).entity(libro).build() :
+                Response.status(400).entity("Libro no encontrado").build();
     }
 
 }

@@ -42,7 +42,7 @@ public class ManagerUsuario {
             stmt.setString(1, correo);
 
             ResultSet result = stmt.executeQuery();
-            result.beforeFirst();
+
             return result.next() ? true : false;
         } catch (SQLException e) {
             e.getStackTrace();

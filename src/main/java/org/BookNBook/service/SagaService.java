@@ -13,4 +13,6 @@ public interface SagaService {
     boolean addLibroSaga(MySQLConnector con, Integer idLibro, Integer idSaga);
 
     List<Libro> ListarLibrosSaga (MySQLConnector con, Integer id);
+
+    List<Saga> listarSaga (MySQLConnector con);
 }

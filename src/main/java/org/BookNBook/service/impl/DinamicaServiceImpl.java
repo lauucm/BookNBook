@@ -1,10 +1,12 @@
 package org.BookNBook.service.impl;
 
+import lombok.AllArgsConstructor;
 import org.BookNBook.persistence.conector.MySQLConnector;
 import org.BookNBook.persistence.dao.Dinamica;
 import org.BookNBook.persistence.manager.ManagerDinamica;
 import org.BookNBook.service.DinamicaService;
 
+@AllArgsConstructor
 public class DinamicaServiceImpl implements DinamicaService {
 
     ManagerDinamica managerDinamica;

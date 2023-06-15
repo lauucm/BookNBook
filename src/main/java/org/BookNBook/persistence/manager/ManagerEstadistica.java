@@ -40,7 +40,7 @@ public class ManagerEstadistica {
             stmt.setInt(2, idUsuario);
 
             ResultSet result = stmt.executeQuery();
-            result.beforeFirst();
+
             result.next();
             return new Estadistica(result);
         } catch (SQLException e) {
@@ -197,13 +197,13 @@ public class ManagerEstadistica {
             throw new RuntimeException(e);
         }
 
-        String sql= "SELECT AVG(calificacion_personal) as calificacion FROM dinamica WHERE id_libro = ?";
+        String sql= "SELECT AVG(calificacion_personal) as calificacion FROM estadistica WHERE id_libro = ?";
 
         try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
             stmt.setInt(1, idLibro);
 
             ResultSet result = stmt.executeQuery();
-            result.beforeFirst();
+
             result.next();
             return result.getDouble("calificacion");
         } catch (SQLException e) {
